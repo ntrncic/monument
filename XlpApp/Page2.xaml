@@ -11,7 +11,7 @@
       Loaded="Page_Loaded">
     <Grid>
         <Grid>
-            <TabControl Background="Black">
+            <TabControl Background="Black" SelectionChanged="TabControl_SelectionChanged">
                 <TabItem Header="Tab1" Background="Black" Foreground="White">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Height="85" Width="1100" VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal">
@@ -23,7 +23,7 @@
                                     <ComboBoxItem Content="Algorithm 2" HorizontalAlignment="Left" Width="200"/>
                                 </ComboBox>
                             </StackPanel>
-                            <Button Name="btn_run" Content="Run" Height="30"></Button>
+                            <Button Name="btn_run" Content="Run" Height="30" Click="btn_run_Click"></Button>
                             <Border Padding="10">
                                 <StackPanel Height="100" Width="280" Orientation="Vertical">
                                     <Label Content="Last Ran"></Label>

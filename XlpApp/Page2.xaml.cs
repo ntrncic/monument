@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Data;
 using LiveCharts;
 using LiveCharts.Wpf;
+using Microsoft.Extensions.Configuration;
+using TT.StockQuoteSource;
+using TT.StockQuoteSource.Contracts;
+using System.Threading.Tasks;
 
 
 class Stock
@@ -75,7 +68,7 @@ namespace XlpApp
 
             DataContext = this;
         }
-        
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             ListView1.Items.Add(new Stock() { Name = "" });
@@ -88,5 +81,19 @@ namespace XlpApp
         public SeriesCollection SeriesCollection { get; set; }
         public string[] Labels { get; set; }
         public Func<double, string> YFormatter { get; set; }
+
+        private async void btn_run_Click(object sender, RoutedEventArgs e)
+        {
+            StockQuoteTask._country = Country.USA;
+            StockQuoteTask._config = StockQuoteTask.GetConfiguration();
+            StockQuoteTask._provider = new StockQuoteSourceProvider(StockQuoteTask._config, StockQuoteTask._country);
+            string stockId = "SPY";
+            Console.WriteLine($"Getting the most recent data of {stockId}");
+
+            Console.WriteLine("Yahoo Finance:");
+            await StockQuoteTask.RunYahooSource(stockId);
+        }
+
     }
+
 }
