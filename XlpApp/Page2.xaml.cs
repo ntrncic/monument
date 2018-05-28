@@ -71,10 +71,10 @@ namespace XlpApp
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            ListView1.Items.Add(new Stock() { Name = "" });
-            ListView1.Items.Add(new Stock() { Name = "" });
-            ListView1.Items.Add(new Stock() { Name = "" });
-            ListView1.Items.Add(new Stock() { Name = "" });
+            //ListView1.Items.Add(new Stock() { Name = "" });
+            //ListView1.Items.Add(new Stock() { Name = "" });
+            //ListView1.Items.Add(new Stock() { Name = "" });
+            //ListView1.Items.Add(new Stock() { Name = "" });
         }
 
 
@@ -91,9 +91,49 @@ namespace XlpApp
             Console.WriteLine($"Getting the most recent data of {stockId}");
 
             Console.WriteLine("Yahoo Finance:");
-            await StockQuoteTask.RunYahooSource(stockId);
+            await StockQuoteTask.RunYahooSource(stockId, this.start_date.SelectedDate.Value, this.end_date.SelectedDate.Value);
         }
 
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void btn_plus_stock_Click(object sender, RoutedEventArgs e)
+        {
+            add_stock_popup.IsOpen = true;
+        }
+
+        private async void btn_add_Click(object sender, RoutedEventArgs e)
+        {
+            //Get Stock Data
+            StockQuoteTask._country = Country.USA;
+            StockQuoteTask._config = StockQuoteTask.GetConfiguration();
+            StockQuoteTask._provider = new StockQuoteSourceProvider(StockQuoteTask._config, StockQuoteTask._country);
+            string stockId = txt_stock.Text;
+            Console.WriteLine($"Getting the most recent data of {stockId}");
+            Console.WriteLine("Yahoo Finance:");
+            var gridView = new GridView();
+            lstv_stock_data.View = gridView;
+            await StockQuoteTask.RunYahooSource(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value);
+            add_stock_popup.IsOpen = false;
+
+            //populate grid
+            // Add columns
+            //gridView.Columns.Add(new GridViewColumn
+            //{
+            //    Header = "Id",
+            //    DisplayMemberBinding = new Binding("Id")
+            //});
+            //gridView.Columns.Add(new GridViewColumn
+            //{
+            //    Header = "Name",
+            //    DisplayMemberBinding = new Binding("Name")
+            //});
+
+            //// Populate list
+            //this.lstv_stock_data.Items.Add(new MyItem { Id = 1, Name = "David" });
+        }
     }
 
 }

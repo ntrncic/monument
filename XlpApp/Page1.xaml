@@ -5,14 +5,15 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:XlpApp"
       mc:Ignorable="d" 
-      d:DesignHeight="800" d:DesignWidth="1200"
+      d:DesignHeight="600" d:DesignWidth="800"
       Background="Black"
       Title="Page1">
 
     <Grid>
-        <Label Background="Black" Foreground="White"  Content="Welcome to XLP Capital&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;Disclaimer:&#xD;&#xA;&#xD;&#xA;Lorem ipsum dolor sit amet, at dicam eripuit feugiat eos, ut falli harum &#xD;&#xA;volutpat eum. In erant ornatus adolescens sit. Ius at iisque tibique corpora, &#xD;&#xA;ne duo mollis dissentiet. Id vis reprimique inciderint. Ut nam populo oblique&#xD;&#xA;, ei vis aliquam deseruisse, sit sanctus sententiae ea.&#xD;&#xA;&#xD;&#xA;Eam mediocrem repudiare cu. Ipsum verterem evertitur cu duo. Molestie d&#xD;&#xA;emocritum mea id, luptatum delicata similique nec eu. Alii vulputate&#xD;&#xA; consetetur sea ex, vel dicat veniam utinam id. Id est dicant iuvaret molestie&#xD;&#xA;, lorem debet sit et." HorizontalAlignment="Left" Height="240" Margin="142.333,48,0,0" VerticalAlignment="Top" Width="440" Grid.Column="1"/>
-        <Button Content="Yes" HorizontalAlignment="Left" Click="Button_Click" Margin="201.333,340,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1"/>
-        <Button Content="No" HorizontalAlignment="Right" Click="Button_Click_1" Margin="0,340,142.333,0" VerticalAlignment="Top" Width="75" Grid.Column="1"/>
+        <Label Background="Black" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" Width="440" Grid.Column="1" 
+               Content="Welcome to XLP Capital&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;Disclaimer:&#xD;&#xA;&#xD;&#xA;Lorem ipsum dolor sit amet, at dicam eripuit feugiat eos, ut falli harum &#xD;&#xA;volutpat eum. In erant ornatus adolescens sit. Ius at iisque tibique corpora, &#xD;&#xA;ne duo mollis dissentiet. Id vis reprimique inciderint. Ut nam populo oblique&#xD;&#xA;, ei vis aliquam deseruisse, sit sanctus sententiae ea.&#xD;&#xA;&#xD;&#xA;Eam mediocrem repudiare cu. Ipsum verterem evertitur cu duo. Molestie d&#xD;&#xA;emocritum mea id, luptatum delicata similique nec eu. Alii vulputate&#xD;&#xA; consetetur sea ex, vel dicat veniam utinam id. Id est dicant iuvaret molestie&#xD;&#xA;, lorem debet sit et."/>
+        <Button Content="Yes" HorizontalAlignment="Left" Click="Button_Click" VerticalAlignment="Center" Width="75" Grid.Column="1"/>
+        <Button Content="No" HorizontalAlignment="Right" Click="Button_Click_1" VerticalAlignment="Center" Width="75" Grid.Column="2"/>
 
     </Grid>
 </Page>

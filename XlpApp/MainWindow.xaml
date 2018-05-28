@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:XlpApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1200" Background="Black">
+        Title="MainWindow"
+        Height="{x:Static SystemParameters.PrimaryScreenHeight}" 
+        Width="{x:Static SystemParameters.PrimaryScreenWidth}" 
+        Background="Black">
     <DockPanel>
         <Frame x:Name="_mainFrame" />
     </DockPanel>

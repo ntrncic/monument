@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using TT.StockQuoteSource;
 using TT.StockQuoteSource.Contracts;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace XlpApp
 {
@@ -34,7 +36,7 @@ namespace XlpApp
             return provider.GetStockDataSources().FirstOrDefault(a => a.Source == StockQuoteSource.AlphaVantage);
         }
 
-        public static async Task RunYahooSource(string stockId)
+        public static async Task RunYahooSource(string stockId, DateTime start, DateTime end)
         {
             IStockQuoteDataSource yahooDataSource = GetYahooDataSource(_provider);
 
@@ -44,11 +46,10 @@ namespace XlpApp
                 return;
             }
 
-            DateTime start = new DateTime(2018, 5, 12);
-            DateTime end = new DateTime(2018, 5, 25);
+            //DateTime start = new DateTime(2018, 5, 12);
+            //DateTime end = new DateTime(2018, 5, 25);
 
             IReadOnlyList<IStockQuoteFromDataSource> results = yahooDataSource.GetHistoricalQuotesAsync(_country, stockId, start, end, WriteToError).Result;
-
             foreach (IStockQuoteFromDataSource data in results)
             {
                 PrintQuote(data);
@@ -57,7 +58,7 @@ namespace XlpApp
 
             if (quote != null)
             {
-                //PrintQuote(quote);
+                PrintQuote(quote);
             }
         }
 
@@ -93,6 +94,11 @@ namespace XlpApp
             Console.WriteLine("Low: " + quote.LowPrice);
             Console.WriteLine("Volume: " + quote.Volume);
             Console.WriteLine();
+        }
+
+        public static void PrintGrid(IStockQuoteFromDataSource quote)
+        {
+            
         }
 
         static void WriteToError(Exception ex)
