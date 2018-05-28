@@ -8,6 +8,7 @@ using TT.StockQuoteSource;
 using TT.StockQuoteSource.Contracts;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.IO;
 
 namespace XlpApp
 {
@@ -46,14 +47,14 @@ namespace XlpApp
                 return;
             }
 
-            //DateTime start = new DateTime(2018, 5, 12);
-            //DateTime end = new DateTime(2018, 5, 25);
-
             IReadOnlyList<IStockQuoteFromDataSource> results = yahooDataSource.GetHistoricalQuotesAsync(_country, stockId, start, end, WriteToError).Result;
+            PrintToCsv(results);
+
             foreach (IStockQuoteFromDataSource data in results)
             {
                 PrintQuote(data);
             }
+
             IStockQuoteFromDataSource quote = await yahooDataSource.GetMostRecentQuoteAsync(_country, stockId, WriteToError).ConfigureAwait(false);
 
             if (quote != null)
@@ -94,6 +95,19 @@ namespace XlpApp
             Console.WriteLine("Low: " + quote.LowPrice);
             Console.WriteLine("Volume: " + quote.Volume);
             Console.WriteLine();
+        }
+
+        public static void PrintToCsv(IReadOnlyList<IStockQuoteFromDataSource> results)
+        {
+            string filePath = System.AppDomain.CurrentDomain.BaseDirectory + "/" + results[0].StockId +".csv";
+            var csv = new StringBuilder();
+
+            foreach (IStockQuoteFromDataSource quote in results)
+            {
+                var newLine = string.Format("{0},{1},{2},{3},{4},{5}", quote.TradeDateTime, quote.OpenPrice, quote.ClosePrice, quote.HighPrice, quote.LowPrice, quote.Volume);
+                csv.AppendLine(newLine);
+            }
+            File.WriteAllText(filePath, csv.ToString());
         }
 
         public static void PrintGrid(IStockQuoteFromDataSource quote)
