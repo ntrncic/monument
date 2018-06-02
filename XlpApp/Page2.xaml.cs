@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using TT.StockQuoteSource;
 using TT.StockQuoteSource.Contracts;
 using System.Threading.Tasks;
+using System.Windows.Data;
+using System.Data;
 
 
 class Stock
@@ -82,6 +84,8 @@ namespace XlpApp
         public string[] Labels { get; set; }
         public Func<double, string> YFormatter { get; set; }
 
+        public DataTable dt_stocks { get; set; }
+
         private async void btn_run_Click(object sender, RoutedEventArgs e)
         {
             StockQuoteTask._country = Country.USA;
@@ -133,6 +137,16 @@ namespace XlpApp
 
             //// Populate list
             //this.lstv_stock_data.Items.Add(new MyItem { Id = 1, Name = "David" });
+        }
+
+        private void btn_add_exit_Click(object sender, RoutedEventArgs e)
+        {
+            add_stock_popup.IsOpen = false;
+        }
+
+        public void StocksToDataTable(DataTable dt)
+        {
+            
         }
     }
 

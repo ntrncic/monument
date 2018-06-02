@@ -6,7 +6,7 @@
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       xmlns:local="clr-namespace:XlpApp"
       mc:Ignorable="d" 
-      d:DesignHeight="800" d:DesignWidth="1200"
+      
       Title="Page2"
       Loaded="Page_Loaded">
     <Grid>
@@ -59,13 +59,20 @@
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="40"></RowDefinition>
                                         <RowDefinition Height="40"></RowDefinition>
+                                        <RowDefinition Height="40"></RowDefinition>
                                     </Grid.RowDefinitions>
                                     <Label Content="Stock" Height="30" Grid.Column="0" Grid.Row="0"></Label>
-                                    <TextBox Name="txt_stock" Width="100" Height="30" Grid.Column="1" Grid.Row="0"></TextBox>
+                                    <TextBox Name="txt_stock" Width="120" Height="30" Grid.Column="1" Grid.Row="0"></TextBox>
                                     <Label Content="Source" Height="30" Grid.Column="0" Grid.Row="1"></Label>
-                                    <TextBox Name="txt_source" Width="100" Height="30" Grid.Column="1" Grid.Row="1"></TextBox>
-                                    <Button Name="btn_add" Height="30" Grid.Row="1" Grid.Column="2" Click="btn_add_Click">Add</Button>
-
+                                    <!--<TextBox Name="txt_source" Width="100" Height="30" Grid.Column="1" Grid.Row="1"></TextBox>-->
+                                    <ComboBox Name="txt_source" Width="120" Height="30" Grid.Column="1" Grid.Row="1">
+                                        <ComboBoxItem>Avantage</ComboBoxItem>
+                                        <ComboBoxItem IsSelected="True">Yahoo</ComboBoxItem>
+                                        <ComboBoxItem>BP</ComboBoxItem>
+                                    </ComboBox>
+                                    <Button Name="btn_add" Height="30" Grid.Row="0" Grid.Column="2" Click="btn_add_Click">Add</Button>
+                                    <Button Name="btn_add_exit" Height="15" Content="X" Foreground="Red" Grid.Row="1" Grid.Column="2" Click="btn_add_exit_Click"></Button>
+                                    
                                 </Grid>
                             </Popup>
                             <Label Content="Start"></Label>

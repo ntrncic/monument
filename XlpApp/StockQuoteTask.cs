@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.IO;
 
+
 namespace XlpApp
 {
     class StockQuoteTask
@@ -101,7 +102,7 @@ namespace XlpApp
         {
             string filePath = System.AppDomain.CurrentDomain.BaseDirectory + "/" + results[0].StockId +".csv";
             var csv = new StringBuilder();
-
+            XlpApp.Page2.
             foreach (IStockQuoteFromDataSource quote in results)
             {
                 var newLine = string.Format("{0},{1},{2},{3},{4},{5}", quote.TradeDateTime, quote.OpenPrice, quote.ClosePrice, quote.HighPrice, quote.LowPrice, quote.Volume);
