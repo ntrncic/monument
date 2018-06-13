@@ -10,7 +10,7 @@ using TT.StockQuoteSource.Contracts;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Data;
-
+using JEXEServerLib;
 
 class Stock
 {
@@ -85,14 +85,41 @@ namespace XlpApp
 
         private async void btn_run_Click(object sender, RoutedEventArgs e)
         {
-            StockQuoteTask._country = Country.USA;
-            StockQuoteTask._config = StockQuoteTask.GetConfiguration();
-            StockQuoteTask._provider = new StockQuoteSourceProvider(StockQuoteTask._config, StockQuoteTask._country);
-            string stockId = "SPY";
-            Console.WriteLine($"Getting the most recent data of {stockId}");
+            object result;
+            Session s = new Session();
+            //s.Load("/Resources/script.ijs");
 
-            Console.WriteLine("Yahoo Finance:");
-            await StockQuoteTask.RunYahooSource(stockId, this.start_date.SelectedDate.Value, this.end_date.SelectedDate.Value);
+
+            JEXEServerClass j = new JEXEServerClass();
+
+            // Create instance of JEXEServer
+            try
+            {
+                JEXEServer jobject = new JEXEServer();
+                // QueryInterface for the IJEXEServer interface:
+                IJEXEServer js = (IJEXEServer)jobject;
+                int rc;  // return code, 0 = success
+                rc = js.DoR("2| !/~i.8", out result);
+                Console.WriteLine(
+                string.Format("J DoR ended with status {0} and result\n{1}",
+                    rc, result));
+            }
+            catch
+            {
+
+            }
+
+
+
+
+            //StockQuoteTask._country = Country.USA;
+            //StockQuoteTask._config = StockQuoteTask.GetConfiguration();
+            //StockQuoteTask._provider = new StockQuoteSourceProvider(StockQuoteTask._config, StockQuoteTask._country);
+            //string stockId = "SPY";
+            //Console.WriteLine($"Getting the most recent data of {stockId}");
+
+            //Console.WriteLine("Yahoo Finance:");
+            //await StockQuoteTask.RunYahooSource(stockId, this.start_date.SelectedDate.Value, this.end_date.SelectedDate.Value);
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
