@@ -72,7 +72,7 @@
                                     </ComboBox>
                                     <Button Name="btn_add" Height="30" Grid.Row="0" Grid.Column="2" Click="btn_add_Click">Add</Button>
                                     <Button Name="btn_add_exit" Height="15" Content="X" Foreground="Red" Grid.Row="1" Grid.Column="2" Click="btn_add_exit_Click"></Button>
-                                    
+
                                 </Grid>
                             </Popup>
                             <Label Content="Start"></Label>
@@ -80,15 +80,42 @@
                             <Label Content="End"></Label>
                             <DatePicker Height="30" BorderThickness="0" Name="end_date" />
                         </StackPanel>
-                        <ListView Name="lstv_stock_data"  
-                            ItemsSource="{Binding Path=''}"
-                            IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Left">
+                        <ListView ItemsSource="{Binding}" Name="lst_stocks" Background="Black" Foreground="White">
                             <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Style.Resources>
+                                        <!-- Foreground for Selected ListViewItem -->
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
+                                 Color="White"/>
+                                        <!-- Background for Selected ListViewItem -->
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                                 Color="Black"/>
+                                    </Style.Resources>
                                 </Style>
                             </ListView.ItemContainerStyle>
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="True">
+                                    <GridView.ColumnHeaderContainerStyle>
+                                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                                            <Style.Resources>
+                                                <!-- Foreground for Selected ListViewItem -->
+                                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White"/>
+                                                <!-- Background for Selected ListViewItem -->
+                                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Black"/>
+                                            </Style.Resources>
+                                        </Style>
+                                    </GridView.ColumnHeaderContainerStyle>
+                                    <GridViewColumn DisplayMemberBinding="{Binding TradeDateTime}" Header="Trade Date" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding OpenPrice}" Header="Open"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding ClosePrice}" Header="Close" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding HighPrice}" Header="High"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding LowPrice}" Header="Low" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Volume}" Header="Volume"/>
+
+                                </GridView>
+                            </ListView.View>
                         </ListView>
+                        <!--<DataGrid Name="grid_stock_data" x:FieldModifier="public" ItemsSource="{Binding}" Background="Black" Foreground="White" ColumnWidth="Auto" Width="Auto"></DataGrid>-->
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Tab2" Background="Black" Foreground="White "/>

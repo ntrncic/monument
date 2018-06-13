@@ -25,6 +25,7 @@ namespace XlpApp
     /// </summary>
     public partial class Page2 : Page
     {
+        private DataSet _ds;
         public Page2()
         {
             InitializeComponent();
@@ -73,12 +74,8 @@ namespace XlpApp
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            //ListView1.Items.Add(new Stock() { Name = "" });
-            //ListView1.Items.Add(new Stock() { Name = "" });
-            //ListView1.Items.Add(new Stock() { Name = "" });
-            //ListView1.Items.Add(new Stock() { Name = "" });
-        }
 
+        }
 
         public SeriesCollection SeriesCollection { get; set; }
         public string[] Labels { get; set; }
@@ -117,9 +114,13 @@ namespace XlpApp
             string stockId = txt_stock.Text;
             Console.WriteLine($"Getting the most recent data of {stockId}");
             Console.WriteLine("Yahoo Finance:");
-            var gridView = new GridView();
-            lstv_stock_data.View = gridView;
-            await StockQuoteTask.RunYahooSource(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value);
+
+            dt_stocks = StockQuoteTask.RunYahooSource(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value).Result;
+            _ds = new DataSet();
+            _ds.Tables.Add(dt_stocks);
+            lst_stocks.DataContext = _ds.Tables[0].DefaultView;
+
+
             add_stock_popup.IsOpen = false;
 
             //populate grid
