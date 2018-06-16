@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Data;
 using JEXEServerLib;
+using System.Diagnostics;
 
 class Stock
 {
@@ -83,34 +84,83 @@ namespace XlpApp
 
         public DataTable dt_stocks { get; set; }
 
+        private JEXEServerClass jObject;
+
         private async void btn_run_Click(object sender, RoutedEventArgs e)
         {
+            Process process = new Process();
+            process.StartInfo.FileName = "jconsole.cmd";
+            process.StartInfo.WorkingDirectory = @"C:\Users\ntrncic\j64-806";
+            process.StartInfo.UseShellExecute = false;
+            //process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardInput = true;
+            process.Start();
+            process.StandardInput.Write(@"load 'C:\JFiles\hello.ijs'");
+            //ProcessStartInfo psi = new ProcessStartInfo
+            //{
+
+            //    FileName = "cmd.exe",
+            //    WorkingDirectory = @"%windir%\system32\",
+
+            //    //@"C:\Users\ntrncic\j64-806";
+            //    Arguments = @"/C cd j64-804 jconsole load 'C:\JFiles\hello.ijs'",
+
+            //    CreateNoWindow = false
+            //};
+            //var prc = Process.Start(psi);
+
+            //process.WaitForExit(200);
+
             object result;
-            Session s = new Session();
+            //Session s = new Session();
             //s.Load("/Resources/script.ijs");
 
 
-            JEXEServerClass j = new JEXEServerClass();
+            JEXEServerClass js = new JEXEServerClass();
 
-            // Create instance of JEXEServer
-            try
-            {
-                JEXEServer jobject = new JEXEServer();
-                // QueryInterface for the IJEXEServer interface:
-                IJEXEServer js = (IJEXEServer)jobject;
-                int rc;  // return code, 0 = success
-                rc = js.DoR("2| !/~i.8", out result);
-                Console.WriteLine(
-                string.Format("J DoR ended with status {0} and result\n{1}",
-                    rc, result));
-            }
-            catch
-            {
+            //            int rc;  // return code, 0 = success
+            //            // rc = js.Quit();       // uncomment to close IDE automatically
+            //            rc = js.Show(1);       // show Term
+            //            rc = js.Log(1);        // log input
+            //            string script = "1!:1 < 'C:\\JFiles\\script.ijs'";
+            //            script = 
+            //@"load 'csv' 
+            //IBMPATH =: 'C:\JFiles\ibm.csv'
+            //IBMPATH2 =: 'C:\JFiles\ibmout.csv'
+            //dat =: readcsv IBMPATH
+            //stock =:> "".&.>}.4{|:dat
+            //pred =: stock , 140 +? 10#20
+            //out =: stock ,: pred
+            //out writecsv IBMPATH2
+            //";
 
-            }
+            //            try
+            //            {
+            //                // Execute the command
+            //                rc = js.DoR(script, out result);
+            //                Console.WriteLine(
+            //                string.Format("J DoR ended with status {0} and result\n{1}",
+            //                    rc, result));
 
+            //                if (rc > 0)
+            //                {
+            //                    // Throw the correct error message
+            //                    object errorMessage;
+            //                    jObject.ErrorTextB(rc, out errorMessage);
+            //                    Exception eoe = new Exception(Convert.ToString(errorMessage));
+            //                    throw eoe;
+            //                }
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                throw ex;
+            //            }
 
+            //rc = js.DoR(script, out result);
 
+            //Console.WriteLine(
+            //string.Format("J DoR ended with status {0} and result\n{1}",
+            //    rc, result));
 
             //StockQuoteTask._country = Country.USA;
             //StockQuoteTask._config = StockQuoteTask.GetConfiguration();
@@ -175,6 +225,30 @@ namespace XlpApp
         public void StocksToDataTable(DataTable dt)
         {
             
+        }
+
+        public void Eval(string command)
+        {
+            try
+            {
+                int result;
+
+                // Execute the command
+                result = jObject.Do(command);
+
+                if (result > 0)
+                {
+                    // Throw the correct error message
+                    object errorMessage;
+                    jObject.ErrorTextB(result, out errorMessage);
+                    Exception eoe = new Exception(Convert.ToString(errorMessage));
+                    throw eoe;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 
