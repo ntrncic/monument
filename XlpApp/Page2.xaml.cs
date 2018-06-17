@@ -10,7 +10,7 @@ using TT.StockQuoteSource.Contracts;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Data;
-using JEXEServerLib;
+//using JEXEServerLib;
 using System.Diagnostics;
 
 class Stock
@@ -84,7 +84,6 @@ namespace XlpApp
 
         public DataTable dt_stocks { get; set; }
 
-        private JEXEServerClass jObject;
 
         private async void btn_run_Click(object sender, RoutedEventArgs e)
         {
@@ -119,7 +118,7 @@ namespace XlpApp
             //s.Load("/Resources/script.ijs");
 
 
-            JEXEServerClass js = new JEXEServerClass();
+            //JEXEServerClass js = new JEXEServerClass();
 
             //            int rc;  // return code, 0 = success
             //            // rc = js.Quit();       // uncomment to close IDE automatically
@@ -228,30 +227,6 @@ namespace XlpApp
         public void StocksToDataTable(DataTable dt)
         {
             
-        }
-
-        public void Eval(string command)
-        {
-            try
-            {
-                int result;
-
-                // Execute the command
-                result = jObject.Do(command);
-
-                if (result > 0)
-                {
-                    // Throw the correct error message
-                    object errorMessage;
-                    jObject.ErrorTextB(result, out errorMessage);
-                    Exception eoe = new Exception(Convert.ToString(errorMessage));
-                    throw eoe;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
         }
     }
 
