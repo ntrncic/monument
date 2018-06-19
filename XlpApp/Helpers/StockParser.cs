@@ -56,7 +56,7 @@ namespace XlpApp.Helpers
                 series[2].Values.Add(Convert.ToDouble(item.HighPrice));
                 series[3].Values.Add(Convert.ToDouble(item.LowPrice));
 
-                labels.Add(item.TradeDateTime.Date.ToString());
+                labels.Add(item.TradeDateTime.Date.ToShortDateString());
             }
 
             return (series, labels);

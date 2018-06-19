@@ -83,10 +83,10 @@ namespace XlpApp
             DtStocks.Columns.Add("HighPrice", typeof(String));
             DtStocks.Columns.Add("LowPrice", typeof(String));
             DtStocks.Columns.Add("Volume", typeof(Double));
-
+           
             foreach (IStockQuoteFromDataSource quote in results)
             {
-                DtStocks.Rows.Add(new Object[] { quote.TradeDateTime, quote.OpenPrice, quote.ClosePrice, quote.HighPrice, quote.LowPrice, quote.Volume });
+                DtStocks.Rows.Add(new Object[] { quote.TradeDateTime.Date.ToShortDateString(), quote.OpenPrice, quote.ClosePrice, quote.HighPrice, quote.LowPrice, quote.Volume });
             }
 
             PrintToCsv(results);
