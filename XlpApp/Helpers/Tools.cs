@@ -4,7 +4,7 @@ using System.Windows;
 using System.Globalization;
 using System.Windows.Markup;
 
-namespace XlpApp.Tools
+namespace XlpApp.Helpers
 {
     [ValueConversion(typeof(string), typeof(string))]
     public class RatioConverter : MarkupExtension, IValueConverter

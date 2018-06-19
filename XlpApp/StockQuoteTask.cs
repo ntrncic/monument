@@ -42,6 +42,28 @@ namespace XlpApp
             return provider.GetStockDataSources().FirstOrDefault(a => a.Source == StockQuoteSource.AlphaVantage);
         }
 
+        //just for tests
+        public static async Task<IReadOnlyList<IStockQuoteFromDataSource>> GetFromYahooSourceAsList(string stockId, DateTime start, DateTime end)
+        {
+            _country = Country.USA;
+            _config = GetConfiguration();
+            _provider = new StockQuoteSourceProvider(_config, _country);
+         
+
+            IStockQuoteDataSource yahooDataSource = GetYahooDataSource(_provider);
+
+            if (yahooDataSource == null)
+            {
+                Console.WriteLine("Error : Yahoo data source object is null");
+                return new List<IStockQuoteFromDataSource>();
+            }
+
+            var results = await yahooDataSource
+                .GetHistoricalQuotesAsync(_country, stockId, start, end, WriteToError);
+
+            return results;
+        }
+
         public static async Task<DataTable> RunYahooSource(string stockId, DateTime start, DateTime end)
         {
             IStockQuoteDataSource yahooDataSource = GetYahooDataSource(_provider);
@@ -52,7 +74,7 @@ namespace XlpApp
                 return new DataTable();
             }
 
-            IReadOnlyList<IStockQuoteFromDataSource> results = yahooDataSource.GetHistoricalQuotesAsync(_country, stockId, start, end, WriteToError).Result;
+            IReadOnlyList<IStockQuoteFromDataSource> results = await yahooDataSource.GetHistoricalQuotesAsync(_country, stockId, start, end, WriteToError);
 
             DataTable DtStocks = new DataTable();
             DtStocks.Columns.Add("TradeDateTime", typeof(String));
@@ -118,9 +140,9 @@ namespace XlpApp
 
         public static void PrintToCsv(IReadOnlyList<IStockQuoteFromDataSource> results)
         {
-            string filePath = System.AppDomain.CurrentDomain.BaseDirectory + "/" + results[0].StockId +".csv";
+            string filePath = System.AppDomain.CurrentDomain.BaseDirectory + "/" + results[0].StockId + ".csv";
             var csv = new StringBuilder();
-          
+
             //using (var reader = ObjectReader.Create(results, "Date", "Open", "Close", "High", "Low", "Volume"))
             //{
             //    pg2.dt_stocks.Load(reader);

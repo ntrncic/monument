@@ -1,23 +1,20 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using LiveCharts;
+﻿using LiveCharts;
 using LiveCharts.Wpf;
-using Microsoft.Extensions.Configuration;
-using TT.StockQuoteSource;
-using TT.StockQuoteSource.Contracts;
-using System.Threading.Tasks;
-using System.Windows.Data;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+
 //using JEXEServerLib;
 using System.Diagnostics;
-
-class Stock
-{
-    public string Name { get; set; }
-}
-
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using TT.StockQuoteSource;
+using TT.StockQuoteSource.Contracts;
+using XlpApp.Helpers;
 
 namespace XlpApp
 {
@@ -26,10 +23,18 @@ namespace XlpApp
     /// </summary>
     public partial class Page2 : Page
     {
-        private DataSet _ds;
+        #region Private Fields
+
+        private DataSet dataSet;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public Page2()
         {
             InitializeComponent();
+            end_date.SelectedDate = DateTime.Now;
 
             SeriesCollection = new SeriesCollection
             {
@@ -53,7 +58,7 @@ namespace XlpApp
                 }
             };
 
-            Labels = new[] { "Jan", "Feb", "Mar", "Apr", "May" };
+            Labels = new List<string> { "Jan", "Feb", "Mar", "Apr", "May" };
             YFormatter = value => value.ToString("C");
 
             //modifying the series collection will animate and update the chart
@@ -73,26 +78,76 @@ namespace XlpApp
             DataContext = this;
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
+        #endregion Public Constructors
 
+        #region Eventhandlers
+
+        private void btnAddStock_Click(object sender, RoutedEventArgs e)
+        {
+            addStockPopup.IsOpen = true;
         }
 
-        public SeriesCollection SeriesCollection { get; set; }
-        public string[] Labels { get; set; }
-        public Func<double, string> YFormatter { get; set; }
-
-        public DataTable dt_stocks { get; set; }
-
-
-        private async void btn_run_Click(object sender, RoutedEventArgs e)
+        private async void btnPopupAddStock_Click(object sender, RoutedEventArgs e)
         {
+            //Get Stock Data
+            StockQuoteTask._country = Country.USA;
+            StockQuoteTask._config = StockQuoteTask.GetConfiguration();
+            StockQuoteTask._provider = new StockQuoteSourceProvider(StockQuoteTask._config, StockQuoteTask._country);
+            string stockId = txt_stock.Text;
+            Console.WriteLine($"Getting the most recent data of {stockId}");
+            Console.WriteLine("Yahoo Finance:");
+
+            addStockPopup.IsOpen = false;
+
+            var previousCursor = Cursor;
+            Cursor = Mouse.OverrideCursor;
+            Mouse.OverrideCursor = Cursors.Wait;
+
+            DataTableStocks = await StockQuoteTask
+                .RunYahooSource(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value);
+            dataSet = new DataSet();
+            dataSet.Tables.Add(DataTableStocks);
+            lst_stocks.DataContext = dataSet.Tables[0].DefaultView;
+
+            UpdateChart(StockParser.GetChartData(DataTableStocks));
+
+            Mouse.OverrideCursor = previousCursor;
+
+            //populate grid
+            // Add columns
+            //gridView.Columns.Add(new GridViewColumn
+            //{
+            //    Header = "Id",
+            //    DisplayMemberBinding = new Binding("Id")
+            //});
+            //gridView.Columns.Add(new GridViewColumn
+            //{
+            //    Header = "Name",
+            //    DisplayMemberBinding = new Binding("Name")
+            //});
+
+            //// Populate list
+            //this.lstv_stock_data.Items.Add(new MyItem { Id = 1, Name = "David" });
+        }
+
+        private void btnPopupExit_Click(object sender, RoutedEventArgs e)
+        {
+            addStockPopup.IsOpen = false;
+        }
+
+        private async void btnRun_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateChart();
+            return;
+
+            #region ???
+
             Process process = new Process();
             process.StartInfo.FileName = "test.bat";
             process.StartInfo.CreateNoWindow = true;
             string path = Environment.CurrentDirectory + @"Algos";
             process.StartInfo.WorkingDirectory = path;
-                //@"C:\Users\ntrncic\j64-806";
+            //@"C:\Users\ntrncic\j64-806";
             //process.StartInfo.UseShellExecute = false;
             //process.StartInfo.RedirectStandardOutput = true;
             //process.StartInfo.RedirectStandardInput = true;
@@ -100,7 +155,6 @@ namespace XlpApp
             //process.StandardInput.Write(@"load 'C:\JFiles\hello.ijs'");
             //ProcessStartInfo psi = new ProcessStartInfo
             //{
-
             //    FileName = "cmd.exe",
             //    WorkingDirectory = @"%windir%\system32\",
 
@@ -117,7 +171,6 @@ namespace XlpApp
             //Session s = new Session();
             //s.Load("/Resources/script.ijs");
 
-
             //JEXEServerClass js = new JEXEServerClass();
 
             //            int rc;  // return code, 0 = success
@@ -125,8 +178,8 @@ namespace XlpApp
             //            rc = js.Show(1);       // show Term
             //            rc = js.Log(1);        // log input
             //            string script = "1!:1 < 'C:\\JFiles\\script.ijs'";
-            //            script = 
-            //@"load 'csv' 
+            //            script =
+            //@"load 'csv'
             //IBMPATH =: 'C:\JFiles\ibm.csv'
             //IBMPATH2 =: 'C:\JFiles\ibmout.csv'
             //dat =: readcsv IBMPATH
@@ -171,63 +224,77 @@ namespace XlpApp
             //Console.WriteLine($"Getting the most recent data of {stockId}");
 
             //Console.WriteLine("Yahoo Finance:");
+
             //await StockQuoteTask.RunYahooSource(stockId, this.start_date.SelectedDate.Value, this.end_date.SelectedDate.Value);
+
+            #endregion ???
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
         }
 
-        private void btn_plus_stock_Click(object sender, RoutedEventArgs e)
-        {
-            add_stock_popup.IsOpen = true;
-        }
+        #endregion Eventhandlers
 
-        private async void btn_add_Click(object sender, RoutedEventArgs e)
-        {
-            //Get Stock Data
-            StockQuoteTask._country = Country.USA;
-            StockQuoteTask._config = StockQuoteTask.GetConfiguration();
-            StockQuoteTask._provider = new StockQuoteSourceProvider(StockQuoteTask._config, StockQuoteTask._country);
-            string stockId = txt_stock.Text;
-            Console.WriteLine($"Getting the most recent data of {stockId}");
-            Console.WriteLine("Yahoo Finance:");
+        #region Public Properties
 
-            dt_stocks = StockQuoteTask.RunYahooSource(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value).Result;
-            _ds = new DataSet();
-            _ds.Tables.Add(dt_stocks);
-            lst_stocks.DataContext = _ds.Tables[0].DefaultView;
+        public DataTable DataTableStocks { get; set; }
+        public List<string> Labels { get; set; }
+        public SeriesCollection SeriesCollection { get; set; }
+        public Func<double, string> YFormatter { get; set; }
 
+        #endregion Public Properties
 
-            add_stock_popup.IsOpen = false;
-
-            //populate grid
-            // Add columns
-            //gridView.Columns.Add(new GridViewColumn
-            //{
-            //    Header = "Id",
-            //    DisplayMemberBinding = new Binding("Id")
-            //});
-            //gridView.Columns.Add(new GridViewColumn
-            //{
-            //    Header = "Name",
-            //    DisplayMemberBinding = new Binding("Name")
-            //});
-
-            //// Populate list
-            //this.lstv_stock_data.Items.Add(new MyItem { Id = 1, Name = "David" });
-        }
-
-        private void btn_add_exit_Click(object sender, RoutedEventArgs e)
-        {
-            add_stock_popup.IsOpen = false;
-        }
+        #region Helper methods
 
         public void StocksToDataTable(DataTable dt)
         {
-            
         }
-    }
 
+        private void UpdateChart((SeriesCollection ValueSeries, List<string> Labels) dataForChart)
+        {
+            SeriesCollection.Clear();
+            SeriesCollection.AddRange(dataForChart.ValueSeries);
+            Chart1.AxisX[0].Labels = dataForChart.Labels;
+        }
+        //just for testing
+        private async void UpdateChart()
+        {
+            List<string> dates = new List<string>();
+
+            var tmp =
+                await StockQuoteTask
+                .GetFromYahooSourceAsList("msft", new DateTime(2018, 6, 1, 12, 0, 0), DateTime.Now);
+
+            var dataForChart = StockParser.GetChartData(tmp);
+
+            UpdateChart(StockParser.GetChartData(tmp));
+        }
+
+        #endregion Helper methods
+
+        #region INotifyPropertyChanged members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion INotifyPropertyChanged members
+    }
+}
+
+internal class Stock
+{
+    #region Public Properties
+
+    public string Name { get; set; }
+
+    #endregion Public Properties
 }

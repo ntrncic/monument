@@ -23,14 +23,14 @@
                                     <ComboBoxItem Content="Algorithm 2" HorizontalAlignment="Left" Width="200"/>
                                 </ComboBox>
                             </StackPanel>
-                            <Button Name="btn_run" Content="Run" Height="30" Click="btn_run_Click"></Button>
+                            <Button Name="btnRun" Content="Run" Height="30" Click="btnRun_Click"></Button>
                             <Border Padding="10">
                                 <StackPanel Height="100" Width="280" Orientation="Vertical">
                                     <Label Content="Last Ran"></Label>
                                     <Label Name="lbl_last_run" Content="TRAIN 80% 20 FEB 2018" ></Label>
                                 </StackPanel>
                             </Border>
-                            <Button Name="btn_update" Content="Update" Height="30"></Button>
+                            <Button Name="btnUpdate" Content="Update" Height="30"></Button>
                             <Border Padding="10">
                                 <StackPanel Height="100" Width="300" Orientation="Vertical">
                                     <Label Content="Last Update"></Label>
@@ -38,7 +38,7 @@
                                 </StackPanel>
                             </Border>
                         </StackPanel>
-                        <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" Height="330">
+                        <lvc:CartesianChart Name="Chart1" Series="{Binding SeriesCollection}" LegendLocation="Right" Height="330">
                             <lvc:CartesianChart.AxisY>
                                 <lvc:Axis Title="Price" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
                             </lvc:CartesianChart.AxisY>
@@ -48,8 +48,8 @@
                         </lvc:CartesianChart>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Stocks" Foreground="White" Width="80"></Label>
-                            <Button Name="add_stock" Height="15" Content="+" Foreground="Green" Click="btn_plus_stock_Click"></Button>
-                            <Popup Name="add_stock_popup" Placement="Mouse" HorizontalOffset="-100" VerticalOffset="-100" AllowsTransparency="False">
+                            <Button Name="btnAddStock" Height="15" Content="+" Foreground="Green" Click="btnAddStock_Click"></Button>
+                            <Popup Name="addStockPopup" Placement="Mouse" HorizontalOffset="-100" VerticalOffset="-100" AllowsTransparency="False">
                                 <Grid Height="150" Width="250">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"></ColumnDefinition>
@@ -70,15 +70,15 @@
                                         <ComboBoxItem IsSelected="True">Yahoo</ComboBoxItem>
                                         <ComboBoxItem>BP</ComboBoxItem>
                                     </ComboBox>
-                                    <Button Name="btn_add" Height="30" Grid.Row="0" Grid.Column="2" Click="btn_add_Click">Add</Button>
-                                    <Button Name="btn_add_exit" Height="15" Content="X" Foreground="Red" Grid.Row="1" Grid.Column="2" Click="btn_add_exit_Click"></Button>
+                                    <Button Name="btnPopupAddStock" Height="30" Grid.Row="0" Grid.Column="2" Click="btnPopupAddStock_Click">Add</Button>
+                                    <Button Name="btnPopupAddExit" Height="15" Content="X" Foreground="Red" Grid.Row="1" Grid.Column="2" Click="btnPopupExit_Click"></Button>
 
                                 </Grid>
                             </Popup>
                             <Label Content="Start"></Label>
                             <DatePicker Height="30" BorderThickness="0" Name="start_date" />
                             <Label Content="End"></Label>
-                            <DatePicker Height="30" BorderThickness="0" Name="end_date" />
+                            <DatePicker Height="30" BorderThickness="0" Name="end_date"  />
                         </StackPanel>
                         <ListView ItemsSource="{Binding}" Name="lst_stocks" Background="Black" Foreground="White">
                             <ListView.ItemContainerStyle>
@@ -122,7 +122,7 @@
                 <TabItem Header="Tab3" Background="Black" Foreground="White" />
             </TabControl>
         </Grid>
-        <ProgressBar HorizontalAlignment="Left" Height="10" Margin="913,275,-213,0" VerticalAlignment="Top" Width="100"/>
+        <!--<ProgressBar HorizontalAlignment="Left" Height="10" Margin="913,275,-213,0" VerticalAlignment="Top" Width="100"/>-->
 
     </Grid>
 </Page>
