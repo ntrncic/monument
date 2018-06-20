@@ -59,5 +59,37 @@ namespace XlpApp.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] hello {
+            get {
+                object obj = ResourceManager.GetObject("hello", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] script {
+            get {
+                object obj = ResourceManager.GetObject("script", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 18!:4 &lt;&apos;z&apos;
+        ///0!:100 baseScript
+        ///18!:4 &lt;&apos;base&apos;
+        ///erase &lt;&apos;loadScript&apos;.
+        /// </summary>
+        internal static string ScriptLoader {
+            get {
+                return ResourceManager.GetString("ScriptLoader", resourceCulture);
+            }
+        }
     }
 }
