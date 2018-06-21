@@ -107,6 +107,7 @@ namespace XlpApp
                 .RunYahooSource(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value);
             dataSet = new DataSet();
             dataSet.Tables.Add(DataTableStocks);
+            
             lst_stocks.DataContext = dataSet.Tables[0].DefaultView;
 
             UpdateChart(StockParser.GetChartData(DataTableStocks));
@@ -137,7 +138,10 @@ namespace XlpApp
 
         private async void btnRun_Click(object sender, RoutedEventArgs e)
         {
-            UpdateChart();
+            var data = ParseCVSFile.ReadFile(@"C:\Users\Walter-PavleJ\Desktop\out.csv");
+
+            UpdateDataTable(data);
+            AppendChartValues(StockParser.GetChartData(data, SeriesCollection[0].Values.Count, end_date.DisplayDate));
             return;
 
             #region ???
@@ -255,6 +259,31 @@ namespace XlpApp
         {
         }
 
+        private void UpdateDataTable(Dictionary<string,CsvData> dataFromFile)
+        {
+            
+            DateTime dateTime = end_date.DisplayDate;
+
+            foreach (var item in dataFromFile["Prediction"].Values)
+            {
+                if (item != 0)
+                {
+                    dateTime = dateTime.AddDays(1);
+
+                    DataTableStocks.Rows.Add(
+                        new Object[]
+                        {
+                            dateTime.ToShortDateString(),
+                            0,
+                            item,
+                            0,
+                            0,
+                            0
+                        });
+                }
+            }
+            
+        }
         private void UpdateChart((SeriesCollection ValueSeries, List<string> Labels) dataForChart)
         {
             SeriesCollection.Clear();
@@ -262,17 +291,14 @@ namespace XlpApp
             Chart1.AxisX[0].Labels = dataForChart.Labels;
         }
         //just for testing
-        private async void UpdateChart()
+        private void AppendChartValues((SeriesCollection ValueSeries, List<string> Labels) dataForChart)
         {
-            List<string> dates = new List<string>();
+            SeriesCollection.AddRange(dataForChart.ValueSeries);
+            foreach (var item in Labels)
+            {
+                Chart1.AxisX[0].Labels.Add(item);
 
-            var tmp =
-                await StockQuoteTask
-                .GetFromYahooSourceAsList("msft", new DateTime(2018, 6, 1, 12, 0, 0), DateTime.Now);
-
-            var dataForChart = StockParser.GetChartData(tmp);
-
-            UpdateChart(StockParser.GetChartData(tmp));
+            }
         }
 
         #endregion Helper methods
