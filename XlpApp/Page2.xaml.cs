@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Windows.Data;
 
 //using JEXEServerLib;
 using System.Diagnostics;
@@ -107,27 +108,14 @@ namespace XlpApp
                 .RunYahooSource(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value);
             dataSet = new DataSet();
             dataSet.Tables.Add(DataTableStocks);
-            lst_stocks.DataContext = dataSet.Tables[0].DefaultView;
+            DataView dv = dataSet.Tables[0].DefaultView;
 
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(dv);
+            view.SortDescriptions.Add(new SortDescription("TradeDateTime", ListSortDirection.Descending));
+            lst_stocks.DataContext = dv;
             UpdateChart(StockParser.GetChartData(DataTableStocks));
 
             Mouse.OverrideCursor = previousCursor;
-
-            //populate grid
-            // Add columns
-            //gridView.Columns.Add(new GridViewColumn
-            //{
-            //    Header = "Id",
-            //    DisplayMemberBinding = new Binding("Id")
-            //});
-            //gridView.Columns.Add(new GridViewColumn
-            //{
-            //    Header = "Name",
-            //    DisplayMemberBinding = new Binding("Name")
-            //});
-
-            //// Populate list
-            //this.lstv_stock_data.Items.Add(new MyItem { Id = 1, Name = "David" });
         }
 
         private void btnPopupExit_Click(object sender, RoutedEventArgs e)
@@ -137,14 +125,20 @@ namespace XlpApp
 
         private async void btnRun_Click(object sender, RoutedEventArgs e)
         {
-            //UpdateChart();
-
             Process b_process = new Process();
             b_process.StartInfo.FileName = "test.bat";
             b_process.StartInfo.CreateNoWindow = true;
             string path = Environment.CurrentDirectory + @"\Algos";
             b_process.StartInfo.WorkingDirectory = path;
             b_process.Start();
+
+            System.Threading.Thread.Sleep(1000);
+            var data = ParseCVSFile.ReadFile(Environment.CurrentDirectory + @"\Algos\out.csv");
+
+            UpdateDataTable(data);
+            UpdateChart(StockParser.GetChartData(DataTableStocks));
+
+            //AppendChartValues(StockParser.GetChartData(data, SeriesCollection[0].Values.Count, end_date.DisplayDate));
 
 
             ////Process process = new Process();
@@ -165,7 +159,7 @@ namespace XlpApp
 
             #region JEXESERVERLIB
 
-            
+
 
             //object result;
             //Session s = new Session();
@@ -232,6 +226,7 @@ namespace XlpApp
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -255,6 +250,30 @@ namespace XlpApp
         {
         }
 
+        private void UpdateDataTable(Dictionary<string, CsvData> dataFromFile)
+        {
+            DateTime dateTime = end_date.DisplayDate;
+            foreach (var item in dataFromFile["Prediction"].Values)
+            {
+                if (item != 0)
+                {
+                    dateTime = dateTime.AddDays(1);
+                    DataRow dr = DataTableStocks.Rows[DataTableStocks.Rows.Count-1];
+                    DataTableStocks.Rows.Add(
+                        new Object[]
+                        {
+                            dateTime.ToShortDateString(),
+                            dr["OpenPrice"],
+                            item,
+                            dr["HighPrice"],
+                            dr["LowPrice"],
+                            dr["Volume"]
+                        });
+                }
+            }
+
+        }
+
         private void UpdateChart((SeriesCollection ValueSeries, List<string> Labels) dataForChart)
         {
             SeriesCollection.Clear();
@@ -262,17 +281,14 @@ namespace XlpApp
             Chart1.AxisX[0].Labels = dataForChart.Labels;
         }
         //just for testing
-        private async void UpdateChart()
+
+        private void AppendChartValues((SeriesCollection ValueSeries, List<string> Labels) dataForChart)
         {
-            List<string> dates = new List<string>();
-
-            var tmp =
-                await StockQuoteTask
-                .GetFromYahooSourceAsList("msft", new DateTime(2018, 6, 1, 12, 0, 0), DateTime.Now);
-
-            var dataForChart = StockParser.GetChartData(tmp);
-
-            UpdateChart(StockParser.GetChartData(tmp));
+            SeriesCollection.AddRange(dataForChart.ValueSeries);
+            foreach (var item in Labels)
+            {
+                Chart1.AxisX[0].Labels.Add(item);
+            }
         }
 
         #endregion Helper methods

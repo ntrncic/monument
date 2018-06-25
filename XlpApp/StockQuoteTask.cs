@@ -140,22 +140,30 @@ namespace XlpApp
 
         public static void PrintToCsv(IReadOnlyList<IStockQuoteFromDataSource> results)
         {
-            string filePath = System.AppDomain.CurrentDomain.BaseDirectory + "/Algos/" + results[0].StockId.ToLower() + ".csv";
-            var csv = new StringBuilder();
-
-            //using (var reader = ObjectReader.Create(results, "Date", "Open", "Close", "High", "Low", "Volume"))
-            //{
-            //    pg2.dt_stocks.Load(reader);
-            //}
-            //pg2.grid_stock_data.DataContext = pg2.dt_stocks.DefaultView;
-            csv.AppendLine(string.Format("{0},{1},{2},{3},{4},{5}","Date", "Open", "Close", "High", "Low", "Volume"));
-
+            string filePath = System.AppDomain.CurrentDomain.BaseDirectory + @"\Algos\" + results[0].StockId.ToLower() + ".csv";
+            string filePathData = System.AppDomain.CurrentDomain.BaseDirectory + @"\\Algos\\data.csv";
+            //var csv = new StringBuilder();
+            var csvData = new StringBuilder();
+            //csv.AppendLine(string.Format("{0},{1},{2},{3},{4},{5}","Date", "Open", "Close", "High", "Low", "Volume"));
+            csvData.AppendLine("Average");
+            string[] dates = new string[results.Count + 1];
+            string[] prices = new string[results.Count + 1];
+            dates[0] = "Date";
+            prices[0] = results[0].StockId.ToUpper();
+            int dateCount = 1;
+            int priceCount = 1;
             foreach (IStockQuoteFromDataSource quote in results)
             {
-                var newLine = string.Format("{0},{1},{2},{3},{4},{5}", quote.TradeDateTime, quote.OpenPrice, quote.ClosePrice, quote.HighPrice, quote.LowPrice, quote.Volume);
-                csv.AppendLine(newLine);
+                dates[dateCount++] = quote.TradeDateTime.ToShortDateString();
+                prices[priceCount++] = quote.ClosePrice.ToString();
+                //var newLine = string.Format("{0},{1},{2},{3},{4},{5}", quote.TradeDateTime, quote.OpenPrice, quote.ClosePrice, quote.HighPrice, quote.LowPrice, quote.Volume);
+                //csv.AppendLine(newLine);
             }
-            File.WriteAllText(filePath, csv.ToString());
+            //File.WriteAllText(filePath, csv.ToString());
+
+            csvData.AppendLine(string.Join(",", dates));
+            csvData.AppendLine(string.Join(",", prices));
+            File.WriteAllText(filePathData, csvData.ToString());
         }
 
         static void WriteToError(Exception ex)

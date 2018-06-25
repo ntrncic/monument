@@ -18,9 +18,9 @@
                             <StackPanel Height="100" Width="330" Orientation="Vertical">
                                 <Label Name="label1" Content="Select and Algorithm"></Label>
                                 <ComboBox Width="220" Height="30">
-                                    <ComboBoxItem Content="Algorithm 1" HorizontalAlignment="Left" Width="200"/>
-                                    <ComboBoxItem Content="Algorithm 2" HorizontalAlignment="Left" Width="200"/>
-                                    <ComboBoxItem Content="Algorithm 2" HorizontalAlignment="Left" Width="200"/>
+                                    <ComboBoxItem Content="Average" HorizontalAlignment="Left" Width="200"/>
+                                    <ComboBoxItem Content="Boost" HorizontalAlignment="Left" Width="200"/>
+                                    <ComboBoxItem Content="LSTM" HorizontalAlignment="Left" Width="200"/>
                                 </ComboBox>
                             </StackPanel>
                             <Button Name="btnRun" Content="Run" Height="30" Click="btnRun_Click"></Button>
