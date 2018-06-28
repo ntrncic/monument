@@ -63,8 +63,7 @@ namespace XlpApp
 
             return results;
         }
-
-        public static async Task<DataTable> RunYahooSource(string stockId, DateTime start, DateTime end)
+        public static async Task<DataTable> RunYahooSource(string stockId, DateTime start, DateTime end, DataTable DtStocks)
         {
             IStockQuoteDataSource yahooDataSource = GetYahooDataSource(_provider);
 
@@ -76,18 +75,32 @@ namespace XlpApp
 
             IReadOnlyList<IStockQuoteFromDataSource> results = await yahooDataSource.GetHistoricalQuotesAsync(_country, stockId, start, end, WriteToError);
 
-            DataTable DtStocks = new DataTable();
-            DtStocks.Columns.Add("TradeDateTime", typeof(String));
-            DtStocks.Columns.Add("OpenPrice", typeof(String));
-            DtStocks.Columns.Add("ClosePrice", typeof(Double));
-            DtStocks.Columns.Add("HighPrice", typeof(String));
-            DtStocks.Columns.Add("LowPrice", typeof(String));
-            DtStocks.Columns.Add("Volume", typeof(Double));
+            //DtStocks.Columns.Add("TradeDateTime", typeof(String));
+            //DtStocks.Columns.Add("OpenPrice", typeof(String));
+            //DtStocks.Columns.Add("ClosePrice", typeof(Double));
+            //DtStocks.Columns.Add("HighPrice", typeof(String));
+            //DtStocks.Columns.Add("LowPrice", typeof(String));
+            //DtStocks.Columns.Add("Volume", typeof(Double));
+
+            Object[] stockPrice = new Object[results.Count+1];
+            stockPrice[0] = stockId.ToUpper();
+            int i= 1;
 
             foreach (IStockQuoteFromDataSource quote in results)
             {
-                DtStocks.Rows.Add(new Object[] { quote.TradeDateTime, quote.OpenPrice, quote.ClosePrice, quote.HighPrice, quote.LowPrice, quote.Volume });
+                if (DtStocks.Rows.Count == 0)
+                {
+                    DtStocks.Columns.Add(quote.TradeDateTime.ToShortDateString(), typeof(Double));
+                }
+                stockPrice[i] = quote.ClosePrice;
+                i++;
+
+                //DtStocks.Rows.Add(new Object[] { quote.TradeDateTime, quote.OpenPrice, quote.ClosePrice, quote.HighPrice, quote.LowPrice, quote.Volume });
             }
+
+
+            DtStocks.Rows.Add(stockPrice);
+            //DtStocks.Rows.Add(stockPrice);
 
             PrintToCsv(results);
             //foreach (IStockQuoteFromDataSource data in results)

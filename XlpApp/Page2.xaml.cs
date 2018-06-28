@@ -16,6 +16,7 @@ using System.Windows.Media;
 using TT.StockQuoteSource;
 using TT.StockQuoteSource.Contracts;
 using XlpApp.Helpers;
+using System.Collections.ObjectModel;
 
 namespace XlpApp
 {
@@ -77,6 +78,9 @@ namespace XlpApp
             SeriesCollection[3].Values.Add(5d);
 
             DataContext = this;
+
+            DataTableStocks = new DataTable();
+            DataTableStocks.Columns.Add("Stock");
         }
 
         #endregion Public Constructors
@@ -104,19 +108,26 @@ namespace XlpApp
             Cursor = Mouse.OverrideCursor;
             Mouse.OverrideCursor = Cursors.Wait;
 
-            DataTableStocks = await StockQuoteTask
-                .RunYahooSource(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value);
-            dataSet = new DataSet();
-            dataSet.Tables.Add(DataTableStocks);
-            DataView dv = dataSet.Tables[0].DefaultView;
+            
+            
 
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(dv);
-            view.SortDescriptions.Add(new SortDescription("TradeDateTime", ListSortDirection.Descending));
-            lst_stocks.DataContext = dv;
-            UpdateChart(StockParser.GetChartData(DataTableStocks));
+            DataTableStocks = await StockQuoteTask
+                .RunYahooSource(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value, DataTableStocks);
+
+            LoadData(DataTableStocks);
+            //dataSet = new DataSet();
+            //dataSet.Tables.Add(DataTableStocks);
+            //DataView dv = dataSet.Tables[0].DefaultView;
+
+            //CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(dv);
+            //view.SortDescriptions.Add(new SortDescription("TradeDateTime", ListSortDirection.Descending));
+            //lst_stocks.DataContext = dv;
+            //UpdateChart(StockParser.GetChartData(DataTableStocks));
 
             Mouse.OverrideCursor = previousCursor;
         }
+
+
 
         private void btnPopupExit_Click(object sender, RoutedEventArgs e)
         {
@@ -272,6 +283,32 @@ namespace XlpApp
                 }
             }
 
+        }
+
+        private void LoadData(DataTable TestTable)
+        {
+            int n = 0;
+            var testoc = new ObservableCollection<object>();
+            foreach (var row in TestTable.Rows)
+            {
+                n = ((System.Data.DataRow)(row)).ItemArray.Length;
+
+
+                testoc.Add(((System.Data.DataRow)(row)).ItemArray);
+            }
+
+            //Auto-generate Columns with binding
+            StockDataGrid.Columns.Clear();
+            for (int i = 0; i < n; i++)
+            {
+                StockDataGrid.Columns.Add
+                    (
+                    new DataGridTextColumn() { Header = TestTable.Columns[i].ColumnName, Binding = new Binding(".[" + i.ToString() + "]") }
+                    );
+                
+            }
+
+            this.DataContext = testoc;
         }
 
         private void UpdateChart((SeriesCollection ValueSeries, List<string> Labels) dataForChart)

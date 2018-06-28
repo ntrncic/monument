@@ -80,14 +80,14 @@
                             <Label Content="End"></Label>
                             <DatePicker Height="30" BorderThickness="0" Name="end_date" />
                         </StackPanel>
-                        <ListView ItemsSource="{Binding}" Name="lst_stocks" Background="Black" Foreground="White">
+                        <!--<ListView ItemsSource="{Binding}" Name="lst_stocks" Background="Black" Foreground="White">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="{x:Type ListViewItem}">
                                     <Style.Resources>
-                                        <!-- Foreground for Selected ListViewItem -->
+                                        --><!-- Foreground for Selected ListViewItem --><!--
                                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" 
                                  Color="White"/>
-                                        <!-- Background for Selected ListViewItem -->
+                                        --><!-- Background for Selected ListViewItem --><!--
                                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
                                  Color="Black"/>
                                     </Style.Resources>
@@ -98,9 +98,9 @@
                                     <GridView.ColumnHeaderContainerStyle>
                                         <Style TargetType="{x:Type GridViewColumnHeader}">
                                             <Style.Resources>
-                                                <!-- Foreground for Selected ListViewItem -->
+                                                --><!-- Foreground for Selected ListViewItem --><!--
                                                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White"/>
-                                                <!-- Background for Selected ListViewItem -->
+                                                --><!-- Background for Selected ListViewItem --><!--
                                                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Black"/>
                                             </Style.Resources>
                                         </Style>
@@ -114,8 +114,8 @@
 
                                 </GridView>
                             </ListView.View>
-                        </ListView>
-                        <!--<DataGrid Name="grid_stock_data" x:FieldModifier="public" ItemsSource="{Binding}" Background="Black" Foreground="White" ColumnWidth="Auto" Width="Auto"></DataGrid>-->
+                        </ListView>-->
+                        <DataGrid Name="StockDataGrid" ItemsSource="{Binding}" Background="Black" Foreground="White" AutoGenerateColumns="False" ColumnWidth="Auto" Width="Auto"></DataGrid>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Tab2" Background="Black" Foreground="White "/>
