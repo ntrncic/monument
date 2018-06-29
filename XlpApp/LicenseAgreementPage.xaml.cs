@@ -16,18 +16,18 @@ using System.Windows.Shapes;
 namespace XlpApp
 {
     /// <summary>
-    /// Interaction logic for Page1.xaml
+    /// Interaction logic for LicenseAgreementPage.xaml
     /// </summary>
-    public partial class Page1 : Page
+    public partial class LicenseAgreementPage : Page
     {
-        public Page1()
+        public LicenseAgreementPage()
         {
             InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.NavigationService.Navigate(new Page2());
+            this.NavigationService.Navigate(new ChartPage());
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)

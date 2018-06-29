@@ -21,9 +21,9 @@ using System.Collections.ObjectModel;
 namespace XlpApp
 {
     /// <summary>
-    /// Interaction logic for Page2.xaml
+    /// Interaction logic for ChartPage.xaml
     /// </summary>
-    public partial class Page2 : Page
+    public partial class ChartPage : Page
     {
         #region Private Fields
 
@@ -33,7 +33,7 @@ namespace XlpApp
 
         #region Public Constructors
 
-        public Page2()
+        public ChartPage()
         {
             InitializeComponent();
             end_date.SelectedDate = DateTime.Now;

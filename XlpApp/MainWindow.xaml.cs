@@ -25,7 +25,7 @@ namespace XlpApp
         public MainWindow()
         {
             InitializeComponent();
-            _mainFrame.Navigate(new Page1());
+            _mainFrame.Navigate(new LicenseAgreementPage());
         }
     }
 }
