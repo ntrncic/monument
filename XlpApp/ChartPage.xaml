@@ -50,13 +50,15 @@
                             <Label Content="Stocks" Foreground="White" Width="80"></Label>
                             <Button Name="btnAddStock" Height="15" Content="+" Foreground="Green" Click="btnAddStock_Click"></Button>
                             <Popup Name="addStockPopup" Placement="Mouse" HorizontalOffset="-100" VerticalOffset="-100" AllowsTransparency="False">
-                                <Grid Height="150" Width="250">
+                                <Grid Height="200" Width="250">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"></ColumnDefinition>
                                         <ColumnDefinition Width="auto"></ColumnDefinition>
                                         <ColumnDefinition Width="auto"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
+                                        <RowDefinition Height="40"></RowDefinition>
+                                        <RowDefinition Height="40"></RowDefinition>
                                         <RowDefinition Height="40"></RowDefinition>
                                         <RowDefinition Height="40"></RowDefinition>
                                         <RowDefinition Height="40"></RowDefinition>
@@ -72,6 +74,9 @@
                                     </ComboBox>
                                     <Button Name="btnPopupAddStock" Height="30" Grid.Row="0" Grid.Column="2" Click="btnPopupAddStock_Click">Add</Button>
                                     <Button Name="btnPopupAddExit" Height="15" Content="X" Foreground="Red" Grid.Row="1" Grid.Column="2" Click="btnPopupExit_Click"></Button>
+                                    <Label Content="File" Height="30" Grid.Column="0" Grid.Row="3"></Label>
+                                    <TextBox Name="file" Width="120" Height="30" Grid.Column="1" Grid.Row="3"></TextBox>
+                                    <Button Name="btnUppload" Height="15" Content="^" Foreground="Green" Grid.Row="3" Grid.Column="2" Click="btnUppload_Click"></Button>
 
                                 </Grid>
                             </Popup>
@@ -115,7 +120,19 @@
                                 </GridView>
                             </ListView.View>
                         </ListView>-->
-                        <DataGrid Name="StockDataGrid" ItemsSource="{Binding}" Background="Black" Foreground="White" AutoGenerateColumns="False" ColumnWidth="Auto" Width="Auto"></DataGrid>
+
+                        <DataGrid x:Name="StockDataGrid" ItemsSource="{Binding}" Background="Black" Foreground="White" AutoGenerateColumns="False" ColumnWidth="Auto" Width="Auto">
+                            <Style TargetType="{x:Type DataGridRow}">
+                                <Style.Triggers>
+                                    <Trigger Property="AlternationIndex" Value="2" >
+                                        <Setter Property="Background" Value="Black" />
+                                    </Trigger>
+                                    <Trigger Property="AlternationIndex" Value="3">
+                                        <Setter Property="Background" Value="Black" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Tab2" Background="Black" Foreground="White "/>

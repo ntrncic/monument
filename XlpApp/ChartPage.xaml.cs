@@ -114,7 +114,10 @@ namespace XlpApp
             DataTableStocks = await StockQuoteTask
                 .RunYahooSource(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value, DataTableStocks);
 
-            LoadData(DataTableStocks);
+            //LoadData(DataTableStocks);
+            
+            
+            
             //dataSet = new DataSet();
             //dataSet.Tables.Add(DataTableStocks);
             //DataView dv = dataSet.Tables[0].DefaultView;
@@ -292,8 +295,6 @@ namespace XlpApp
             foreach (var row in TestTable.Rows)
             {
                 n = ((System.Data.DataRow)(row)).ItemArray.Length;
-
-
                 testoc.Add(((System.Data.DataRow)(row)).ItemArray);
             }
 
@@ -304,10 +305,8 @@ namespace XlpApp
                 StockDataGrid.Columns.Add
                     (
                     new DataGridTextColumn() { Header = TestTable.Columns[i].ColumnName, Binding = new Binding(".[" + i.ToString() + "]") }
-                    );
-                
+                    ); 
             }
-
             this.DataContext = testoc;
         }
 
@@ -340,6 +339,11 @@ namespace XlpApp
         }
 
         #endregion INotifyPropertyChanged members
+
+        private void btnUppload_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
 
