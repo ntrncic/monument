@@ -43,44 +43,7 @@ namespace XlpApp.Helpers
 
             return data;
         }
-
-        public static Dictionary<string, CsvData> UploadReadFile(string filePath)
-        {
-            Dictionary<string, CsvData> data = new Dictionary<string, CsvData>();
-            char[] delimiters = new char[] { ',' };
-            using (StreamReader reader = new StreamReader(filePath))
-            {
-                while (true)
-                {
-
-                    string line = reader.ReadLine();
-                    if (line == null)
-                    {
-                        break;
-                    }
-                    string[] parts = line.Split(delimiters);
-                    var csvData = new CsvData();
-                    for (int i = 1; i < parts.Length; i++)
-                    {
-                        if (parts[i] != "")
-                        {
-                            try
-                            {
-                                csvData.Values.Add(Convert.ToDecimal(parts[i]));
-                            }
-                            catch
-                            {
-                                csvData.Columns.Add(parts[i]);
-                            }
-                        }
-                        csvData.Values.Add(Convert.ToDecimal(parts[i]));
-                    }
-                    data.Add(parts[0], csvData);
-                    // Console.WriteLine("{0} field(s)", parts.Length);
-                }
-                return data;
-            }
-        }
+       
 
         public static DataTable ConvertCSVtoDataTable(string strFilePath)
         {

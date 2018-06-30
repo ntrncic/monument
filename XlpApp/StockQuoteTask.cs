@@ -88,25 +88,10 @@ namespace XlpApp
                 stockPrice[i] = quote.ClosePrice;
                 i++;
 
-                //DtStocks.Rows.Add(new Object[] { quote.TradeDateTime, quote.OpenPrice, quote.ClosePrice, quote.HighPrice, quote.LowPrice, quote.Volume });
             }
 
-
             DtStocks.Rows.Add(stockPrice);
-            //DtStocks.Rows.Add(stockPrice);
-
             PrintToCsv(DtStocks);
-            //foreach (IStockQuoteFromDataSource data in results)
-            //{
-            //    PrintQuote(data);
-            //}
-
-            //IStockQuoteFromDataSource quote = await yahooDataSource.GetMostRecentQuoteAsync(_country, stockId, WriteToError).ConfigureAwait(false);
-
-            //if (quote != null)
-            //{
-            //    PrintQuote(quote);
-            //}
             return DtStocks;
         }
 
@@ -146,18 +131,10 @@ namespace XlpApp
 
         public static void PrintToCsv(DataTable results)
         {
-            //string filePath = System.AppDomain.CurrentDomain.BaseDirectory + @"\Algos\" + results[0].StockId.ToLower() + ".csv";
             string filePathData = System.AppDomain.CurrentDomain.BaseDirectory + @"\\Algos\\data.csv";
-            //var csv = new StringBuilder();
+
             var csvData = new StringBuilder();
-            //csv.AppendLine(string.Format("{0},{1},{2},{3},{4},{5}","Date", "Open", "Close", "High", "Low", "Volume"));
             csvData.AppendLine("Average");
-            //string[] dates = new string[results.L + 1];
-            //string[] prices = new string[results.Count + 1];
-            //dates[0] = "Date";
-            //prices[0] = results[0].StockId.ToUpper();
-            //int dateCount = 1;
-            //int priceCount = 1;
 
             var newLine = "Date, ";
             foreach (DataColumn column in results.Columns)
@@ -165,23 +142,12 @@ namespace XlpApp
                 if (column.ColumnName != "Stock")
                     newLine += column.ColumnName + ", ";
             }
-            //newLine += 
-            //    string.Format("{0},{1},{2},{3},{4},{5}", quote.TradeDateTime, quote.OpenPrice, quote.ClosePrice, quote.HighPrice, quote.LowPrice, quote.Volume);
             csvData.AppendLine(newLine);
-
 
             foreach (DataRow row in results.Rows)
             {
                 csvData.AppendLine(string.Join(",", row.ItemArray));
-                //dates[dateCount++] = quote.TradeDateTime.ToShortDateString();
-                //prices[priceCount++] = quote.ClosePrice.ToString();
-
-
             }
-            //File.WriteAllText(filePath, csv.ToString());
-
-            //csvData.AppendLine(string.Join(",", dates));
-            //csvData.AppendLine(string.Join(",", prices));
             File.WriteAllText(filePathData, csvData.ToString());
         }
 
