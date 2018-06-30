@@ -75,7 +75,13 @@
                                     <Button Name="btnPopupAddStock" Height="30" Grid.Row="0" Grid.Column="2" Click="btnPopupAddStock_Click">Add</Button>
                                     <Button Name="btnPopupAddExit" Height="15" Content="X" Foreground="Red" Grid.Row="1" Grid.Column="2" Click="btnPopupExit_Click"></Button>
                                     <Label Content="File" Height="30" Grid.Column="0" Grid.Row="3"></Label>
-                                    <TextBox Name="file" Width="120" Height="30" Grid.Column="1" Grid.Row="3"></TextBox>
+                                    <!--<TextBox Name="file" Width="120" Height="30" Grid.Column="1" Grid.Row="3"></TextBox>-->
+                                    <DockPanel Grid.Row="3" Grid.Column="1">
+                                        <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,10">
+                                            <Button Name="btnOpenFile" Click="btnOpenFile_Click">Upload file</Button>
+                                        </WrapPanel>
+                                        <TextBox Name="txtEditor" />
+                                    </DockPanel>
                                     <Button Name="btnUppload" Height="15" Content="^" Foreground="Green" Grid.Row="3" Grid.Column="2" Click="btnUppload_Click"></Button>
 
                                 </Grid>

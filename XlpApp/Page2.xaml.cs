@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Windows.Data;
+using System.IO;
+using Microsoft.Win32;
 
 //using JEXEServerLib;
 using System.Diagnostics;
@@ -116,8 +118,6 @@ namespace XlpApp
 
             //LoadData(DataTableStocks);
             
-            
-            
             //dataSet = new DataSet();
             //dataSet.Tables.Add(DataTableStocks);
             //DataView dv = dataSet.Tables[0].DefaultView;
@@ -130,7 +130,25 @@ namespace XlpApp
             Mouse.OverrideCursor = previousCursor;
         }
 
+        private void btnUppload_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
+
+        private void btnOpenFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                DataTableStocks = ParseCVSFile.ConvertCSVtoDataTable(openFileDialog.FileName);
+                addStockPopup.IsOpen = false;
+                //var data = ParseCVSFile.UploadReadFile(openFileDialog.FileName);
+                //DataTableStocks.Rows.Add(data.Values);
+                //UpdateDataTable(data);
+            }
+
+            //txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
+        }
 
         private void btnPopupExit_Click(object sender, RoutedEventArgs e)
         {
@@ -151,7 +169,7 @@ namespace XlpApp
 
             UpdateDataTable(data);
             UpdateChart(StockParser.GetChartData(DataTableStocks));
-
+            
             //AppendChartValues(StockParser.GetChartData(data, SeriesCollection[0].Values.Count, end_date.DisplayDate));
 
 
@@ -288,6 +306,30 @@ namespace XlpApp
 
         }
 
+        private void UpdateDataTableUpload(Dictionary<string, CsvData> dataFromFile)
+        {
+            DateTime dateTime = end_date.DisplayDate;
+            foreach (var item in dataFromFile["Prediction"].Values)
+            {
+                if (item != 0)
+                {
+                    dateTime = dateTime.AddDays(1);
+                    DataRow dr = DataTableStocks.Rows[DataTableStocks.Rows.Count - 1];
+                    DataTableStocks.Rows.Add(
+                        new Object[]
+                        {
+                            dateTime.ToShortDateString(),
+                            dr["OpenPrice"],
+                            item,
+                            dr["HighPrice"],
+                            dr["LowPrice"],
+                            dr["Volume"]
+                        });
+                }
+            }
+
+        }
+
         private void LoadData(DataTable TestTable)
         {
             int n = 0;
@@ -295,6 +337,8 @@ namespace XlpApp
             foreach (var row in TestTable.Rows)
             {
                 n = ((System.Data.DataRow)(row)).ItemArray.Length;
+
+
                 testoc.Add(((System.Data.DataRow)(row)).ItemArray);
             }
 
@@ -305,8 +349,10 @@ namespace XlpApp
                 StockDataGrid.Columns.Add
                     (
                     new DataGridTextColumn() { Header = TestTable.Columns[i].ColumnName, Binding = new Binding(".[" + i.ToString() + "]") }
-                    ); 
+                    );
+                
             }
+
             this.DataContext = testoc;
         }
 
@@ -339,11 +385,6 @@ namespace XlpApp
         }
 
         #endregion INotifyPropertyChanged members
-
-        private void btnUppload_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
 
