@@ -116,7 +116,7 @@ namespace XlpApp
             DataTableStocks = await StockQuoteTask
                 .RunYahooSource(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value, DataTableStocks);
 
-            //LoadData(DataTableStocks);
+            LoadData(DataTableStocks);
             
             //dataSet = new DataSet();
             //dataSet.Tables.Add(DataTableStocks);
@@ -142,6 +142,7 @@ namespace XlpApp
             {
                 DataTableStocks = ParseCVSFile.ConvertCSVtoDataTable(openFileDialog.FileName);
                 addStockPopup.IsOpen = false;
+                LoadData(DataTableStocks);
                 //var data = ParseCVSFile.UploadReadFile(openFileDialog.FileName);
                 //DataTableStocks.Rows.Add(data.Values);
                 //UpdateDataTable(data);
@@ -352,8 +353,9 @@ namespace XlpApp
                     );
                 
             }
-
-            this.DataContext = testoc;
+            StockDataGrid.ItemsSource = testoc;
+            
+            //this.DataContext = testoc;
         }
 
         private void UpdateChart((SeriesCollection ValueSeries, List<string> Labels) dataForChart)
