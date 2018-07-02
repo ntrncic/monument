@@ -128,7 +128,7 @@
                         </ListView>-->
 
                         <DataGrid x:Name="StockDataGrid" ItemsSource="{Binding}" Background="Black" Foreground="White" AutoGenerateColumns="False" ColumnWidth="Auto" Width="Auto">
-                            <Style TargetType="{x:Type DataGridRow}">
+                            <!--<Style TargetType="{x:Type DataGridRow}">
                                 <Style.Triggers>
                                     <Trigger Property="AlternationIndex" Value="2" >
                                         <Setter Property="Background" Value="Black" />
@@ -137,7 +137,7 @@
                                         <Setter Property="Background" Value="Black" />
                                     </Trigger>
                                 </Style.Triggers>
-                            </Style>
+                            </Style>-->
                         </DataGrid>
                     </StackPanel>
                 </TabItem>
