@@ -1,12 +1,145 @@
 ﻿<UserControl x:Class="XlpApp.UserControls.ChartUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:XlpApp.UserControls"
-             mc:Ignorable="d" 
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <StackPanel Orientation="Vertical">
+            <StackPanel Height="85" Width="1100" VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal">
+                <StackPanel Height="100" Width="330" Orientation="Vertical">
+                    <Label Name="label1" Content="Select and Algorithm"></Label>
+                    <ComboBox Width="220" Height="30">
+                        <ComboBoxItem Content="Average" HorizontalAlignment="Left" Width="200" />
+                        <ComboBoxItem Content="Boost" HorizontalAlignment="Left" Width="200" />
+                        <ComboBoxItem Content="LSTM" HorizontalAlignment="Left" Width="200" />
+                    </ComboBox>
+                </StackPanel>
+                <Button Name="btnRun" Content="Run" Height="30" Click="btnRun_Click"></Button>
+                <Border Padding="10">
+                    <StackPanel Height="100" Width="280" Orientation="Vertical">
+                        <Label Content="Last Ran"></Label>
+                        <Label Name="lbl_last_run" Content="TRAIN 80% 20 FEB 2018" ></Label>
+                    </StackPanel>
+                </Border>
+                <Button Name="btnUpdate" Content="Update" Height="30"></Button>
+                <Border Padding="10">
+                    <StackPanel Height="100" Width="300" Orientation="Vertical">
+                        <Label Content="Last Update"></Label>
+                        <Label Name="lbl_last_update" Content="17:03:32 on 26 March 2018" ></Label>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+            <lvc:CartesianChart Name="Chart1" Series="{Binding SeriesCollection}" LegendLocation="Right" Height="330">
+                <lvc:CartesianChart.AxisY>
+                    <lvc:Axis Title="Price" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+                </lvc:CartesianChart.AxisY>
+                <lvc:CartesianChart.AxisX>
+                    <lvc:Axis Title="Time" Labels="{Binding Labels}"></lvc:Axis>
+                </lvc:CartesianChart.AxisX>
+            </lvc:CartesianChart>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Stocks" Foreground="White" Width="80"></Label>
+                <Button Name="btnAddStock" Height="15" Content="+" Foreground="Green" Click="btnAddStock_Click"></Button>
+                <Popup Name="addStockPopup" Placement="Mouse" HorizontalOffset="-100" VerticalOffset="-100" AllowsTransparency="False">
+                    <Grid Height="200" Width="250">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"></RowDefinition>
+                            <RowDefinition Height="40"></RowDefinition>
+                            <RowDefinition Height="40"></RowDefinition>
+                            <RowDefinition Height="40"></RowDefinition>
+                            <RowDefinition Height="40"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Label Content="Stock" Height="30" Grid.Column="0" Grid.Row="0"></Label>
+                        <TextBox Name="txt_stock" Width="120" Height="30" Grid.Column="1" Grid.Row="0"></TextBox>
+                        <Label Content="Source" Height="30" Grid.Column="0" Grid.Row="1"></Label>
+                        <!--<TextBox Name="txt_source" Width="100" Height="30" Grid.Column="1" Grid.Row="1"></TextBox>-->
+                        <ComboBox Name="txt_source" Width="120" Height="30" Grid.Column="1" Grid.Row="1">
+                            <ComboBoxItem>Avantage</ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">Yahoo</ComboBoxItem>
+                            <ComboBoxItem>BP</ComboBoxItem>
+                        </ComboBox>
+                        <Button Name="btnPopupAddStock" Height="30" Grid.Row="0" Grid.Column="2" Click="btnPopupAddStock_Click">Add</Button>
+                        <Button Name="btnPopupAddExit" Height="15" Content="X" Foreground="Red" Grid.Row="1" Grid.Column="2" Click="btnPopupExit_Click"></Button>
+                        <Label Content="File" Height="30" Grid.Column="0" Grid.Row="3"></Label>
+                        <!--<TextBox Name="file" Width="120" Height="30" Grid.Column="1" Grid.Row="3"></TextBox>-->
+                        <DockPanel Grid.Row="3" Grid.Column="1">
+                            <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,10">
+                                <Button Name="btnOpenFile" Click="btnOpenFile_Click">Upload file</Button>
+                            </WrapPanel>
+                            <TextBox Name="txtEditor" />
+                        </DockPanel>
+                        <Button Name="btnUppload" Height="15" Content="^" Foreground="Green" Grid.Row="3" Grid.Column="2" Click="btnUppload_Click"></Button>
+                    </Grid>
+                </Popup>
+                <Label Content="Start"></Label>
+                <DatePicker Height="30" BorderThickness="0" Name="start_date" />
+                <Label Content="End"></Label>
+                <DatePicker Height="30" BorderThickness="0" Name="end_date" />
+            </StackPanel>
+            <!--<ListView ItemsSource="{Binding}" Name="lst_stocks" Background="Black" Foreground="White">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Style.Resources>
+                                        -->
+            <!-- Foreground for Selected ListViewItem -->
+            <!--
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
+                                 Color="White" />
+                                        -->
+            <!-- Background for Selected ListViewItem -->
+            <!--
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                                 Color="Black" />
+                                    </Style.Resources>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="True">
+                                    <GridView.ColumnHeaderContainerStyle>
+                                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                                            <Style.Resources>
+                                                -->
+            <!-- Foreground for Selected ListViewItem -->
+            <!--
+                                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White" />
+                                                -->
+            <!-- Background for Selected ListViewItem -->
+            <!--
+                                                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Black" />
+                                            </Style.Resources>
+                                        </Style>
+                                    </GridView.ColumnHeaderContainerStyle>
+                                    <GridViewColumn DisplayMemberBinding="{Binding TradeDateTime}" Header="Trade Date" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding OpenPrice}" Header="Open" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding ClosePrice}" Header="Close" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding HighPrice}" Header="High" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding LowPrice}" Header="Low" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Volume}" Header="Volume" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>-->
+
+            <DataGrid x:Name="StockDataGrid" ItemsSource="{Binding}" Background="Black" Foreground="White" AutoGenerateColumns="False" ColumnWidth="Auto" Width="Auto">
+                <!--<Style TargetType="{x:Type DataGridRow}">
+                                <Style.Triggers>
+                                    <Trigger Property="AlternationIndex" Value="2">
+                                        <Setter Property="Background" Value="Black" />
+                                    </Trigger>
+                                    <Trigger Property="AlternationIndex" Value="3">
+                                        <Setter Property="Background" Value="Black" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>-->
+            </DataGrid>
+        </StackPanel>
     </Grid>
 </UserControl>
