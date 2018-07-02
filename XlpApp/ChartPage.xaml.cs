@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 
@@ -8,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using XlpApp.UserControls;
 
 namespace XlpApp
@@ -110,7 +112,10 @@ namespace XlpApp
         private void InitializeTabInterface()
         {
             TabItem plusTab = new TabItem();
+            // plusTab.Header = "+";
+
             plusTab.Header = "+";
+            plusTab.HeaderTemplate = tabDynamic.FindResource("AddNewTabTemplate") as DataTemplate;
             plusTab.Background = new SolidColorBrush(Colors.Black);
             tabItems.Add(plusTab);
             this.AddNewTab();
@@ -148,6 +153,11 @@ namespace XlpApp
         }
 
         #endregion INotifyPropertyChanged members
+
+        private void addNewTab_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
 

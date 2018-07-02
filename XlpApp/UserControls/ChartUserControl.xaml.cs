@@ -1,4 +1,6 @@
 ﻿using LiveCharts;
+using LiveCharts.Defaults;
+using LiveCharts.Wpf;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -7,10 +9,12 @@ using System.Data;
 
 //using JEXEServerLib;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using TT.StockQuoteSource;
 using TT.StockQuoteSource.Contracts;
 using XlpApp.Helpers;
@@ -32,7 +36,7 @@ namespace XlpApp.UserControls
 
             end_date.SelectedDate = DateTime.Now;
             DataContext = this;
-
+            SeriesCollection = new SeriesCollection();
             //SeriesCollection = new SeriesCollection
             //{
             //    new LineSeries
@@ -107,21 +111,56 @@ namespace XlpApp.UserControls
             //txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
         }
 
+
+        private void UpdateChart(IReadOnlyList<IStockQuoteFromDataSource> stockQuoteFromDataSources)
+        {
+            SeriesCollection.Clear();
+            var series = StockParser.GetOhlcChartData(stockQuoteFromDataSources);
+
+            SeriesCollection.AddRange(series.ValueSeries);
+            Chart1.AxisX[0].Labels = series.Labels;
+
+        }
+
+        private void AddToChart(CartesianChart cartesianChart, SeriesCollection seriesCollection, (SeriesCollection ValueSeries, List<string> Labels) chartData)
+        {
+            if (cartesianChart.Series.Count > 0)
+            {
+                seriesCollection[0].Values.Add(chartData.ValueSeries);
+            }
+            else
+            {
+                
+                seriesCollection.AddRange(chartData.ValueSeries);
+                cartesianChart.AxisX[0].Labels = chartData.Labels;
+                cartesianChart.Series[0].ScalesYAt = 0;
+            }
+        }
+
         private async void btnPopupAddStock_Click(object sender, RoutedEventArgs e)
         {
+            //SeriesCollection.Clear();
             //Get Stock Data
-            StockQuoteTask._country = Country.USA;
-            StockQuoteTask._config = StockQuoteTask.GetConfiguration();
-            StockQuoteTask._provider = new StockQuoteSourceProvider(StockQuoteTask._config, StockQuoteTask._country);
+
+            //StockQuoteTask._country = Country.USA;
+            //StockQuoteTask._config = StockQuoteTask.GetConfiguration();
+            //StockQuoteTask._provider = new StockQuoteSourceProvider(StockQuoteTask._config, StockQuoteTask._country);
+
             string stockId = txt_stock.Text;
             Console.WriteLine($"Getting the most recent data of {stockId}");
             Console.WriteLine("Yahoo Finance:");
 
             addStockPopup.IsOpen = false;
 
+            var tmp =
+                await StockQuoteTask.GetFromYahooSourceAsList(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value);
+            UpdateChart(tmp);
+
             var previousCursor = Cursor;
             Cursor = Mouse.OverrideCursor;
             Mouse.OverrideCursor = Cursors.Wait;
+
+
 
             DataTableStocks = await StockQuoteTask
                 .RunYahooSource(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value, DataTableStocks);

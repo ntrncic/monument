@@ -1,4 +1,5 @@
 ﻿using LiveCharts;
+using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using TT.StockQuoteSource.Contracts;
 
 namespace XlpApp.Helpers
@@ -79,6 +81,41 @@ namespace XlpApp.Helpers
             }
 
             return (series, labels);
+        }
+
+        public static (SeriesCollection ValueSeries, List<string> Labels) GetOhlcChartData(IReadOnlyList<IStockQuoteFromDataSource> stockQuoteFromDataSources)
+        {
+            var stockSeries = new ChartValues<OhlcPoint>();
+            var labels = new List<string>();
+
+            foreach (IStockQuoteFromDataSource item in stockQuoteFromDataSources)
+            {
+                stockSeries.Add(new OhlcPoint
+                {
+                    Open = (double)item.OpenPrice,
+                    High = (double)item.HighPrice,
+                    Low = (double)item.LowPrice,
+                    Close = (double)item.ClosePrice
+                });
+                labels.Add(item.TradeDateTime.ToShortDateString());
+            }
+
+            var seriesCol = new SeriesCollection
+            {
+                 new OhlcSeries()
+                 {
+                     Title = stockQuoteFromDataSources[0].StockId,
+                     Values = stockSeries
+                 },
+                 new LineSeries
+                 {
+                     Title = stockQuoteFromDataSources[0].StockId,
+                     Values = new ChartValues<double>(stockSeries.Select(x => x.Close)),
+                     Fill = Brushes.Transparent
+                 }
+            };
+
+            return (seriesCol, labels);
         }
 
         public static (SeriesCollection ValueSeries, List<string> Labels) GetChartData(Dictionary<string, CsvData> dataFromFile, int numberOfDays, DateTime lastDay)

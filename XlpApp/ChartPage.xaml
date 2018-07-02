@@ -15,7 +15,7 @@
                 <DockPanel Background="Black" Margin="0">
                     <Button Name="btnDelete" DockPanel.Dock="Right"  Click="btnDelete_Click"
                              CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Name}">
-                        <Image Source="C:\\Users\\Walter-PavleJ\\Desktop\\delete.png" Height="20" Width="20"></Image>
+                        <Image Source="/Images/close.png" Height="20" Width="20"></Image>
                     </Button>
                     <TextBox Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=Header}"
                                  MinWidth="120"
@@ -24,6 +24,9 @@
                                  VerticalContentAlignment="Center"
                                  Background="Black" />
                 </DockPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="AddNewTabTemplate" DataType="TabItem">
+                <Image Source="/Images/addTab.png" Height="20" Width="20"></Image>
             </DataTemplate>
         </TabControl.Resources>
     </TabControl>
