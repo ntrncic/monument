@@ -65,6 +65,10 @@ namespace XlpApp
         }
         public static async Task<DataTable> RunYahooSource(string stockId, DateTime start, DateTime end, DataTable DtStocks)
         {
+            _country = Country.USA;
+            _config = GetConfiguration();
+            _provider = new StockQuoteSourceProvider(_config, _country);
+
             IStockQuoteDataSource yahooDataSource = GetYahooDataSource(_provider);
 
             if (yahooDataSource == null)

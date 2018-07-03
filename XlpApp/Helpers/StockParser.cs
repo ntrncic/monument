@@ -43,6 +43,7 @@ namespace XlpApp.Helpers
                     }
                 };
             }
+            set { }
         }
 
         public static (SeriesCollection ValueSeries, List<string> Labels) GetChartData(IReadOnlyList<IStockQuoteFromDataSource> stockQuoteFromDataSources)
@@ -68,16 +69,32 @@ namespace XlpApp.Helpers
         {
             List<string> labels = new List<string>();
 
-            SeriesCollection series = Series;
+            SeriesCollection series = new SeriesCollection();
 
+            int rownum = 0;
+            int seriesNum = 0;
             foreach (DataRow item in stockQuoteFromDataSources.Rows)
             {
-                series[0].Values.Add(Convert.ToDouble(item[1].ToString()));
-                series[1].Values.Add(Convert.ToDouble(item[2].ToString()));
-                series[2].Values.Add(Convert.ToDouble(item[3].ToString()));
-                series[3].Values.Add(Convert.ToDouble(item[4].ToString()));
+                series.Add(new LineSeries
+                {
+                    Title = item[0].ToString(),
+                    Values = new ChartValues<double>()
+                });
+                
+                for(int i=1; i < item.ItemArray.Length; i++)
+                    series[seriesNum].Values.Add(Convert.ToDouble(item[i].ToString()));
 
-                labels.Add(item[0].ToString());
+                seriesNum++;
+                //series[1].Values.Add(Convert.ToDouble(item[2].ToString()));
+                //series[2].Values.Add(Convert.ToDouble(item[3].ToString()));
+                //series[3].Values.Add(Convert.ToDouble(item[4].ToString()));  
+            }
+
+            foreach(DataColumn dc in stockQuoteFromDataSources.Columns)
+            {
+                if (dc.ColumnName == "Stock")
+                    continue;
+                labels.Add(dc.ColumnName);
             }
 
             return (series, labels);

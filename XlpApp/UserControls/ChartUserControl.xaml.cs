@@ -155,9 +155,9 @@ namespace XlpApp.UserControls
 
             addStockPopup.IsOpen = false;
 
-            var tmp =
-                await StockQuoteTask.GetFromYahooSourceAsList(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value);
-            UpdateChart(tmp);
+            //var tmp =
+             //   await StockQuoteTask.GetFromYahooSourceAsList(stockId, start_date.SelectedDate.Value, end_date.SelectedDate.Value);
+            //UpdateChart(tmp);
 
             var previousCursor = Cursor;
             Cursor = Mouse.OverrideCursor;
@@ -177,7 +177,8 @@ namespace XlpApp.UserControls
             //CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(dv);
             //view.SortDescriptions.Add(new SortDescription("TradeDateTime", ListSortDirection.Descending));
             //lst_stocks.DataContext = dv;
-            //UpdateChart(StockParser.GetChartData(DataTableStocks));
+
+            UpdateChart(StockParser.GetChartData(DataTableStocks));
 
             Mouse.OverrideCursor = previousCursor;
         }
