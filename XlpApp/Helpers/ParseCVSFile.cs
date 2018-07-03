@@ -55,42 +55,59 @@ namespace XlpApp.Helpers
                 {
                     dt.Columns.Add(header);
                 }
-                while (!sr.EndOfStream)
+                string filePathData = System.AppDomain.CurrentDomain.BaseDirectory + @"\\Algos\\data.csv";
+                using (var outputStream = new StreamWriter(filePathData))
                 {
-                    string[] rows = sr.ReadLine().Split(',');
-                    DataRow dr = dt.NewRow();
-                    for (int i = 0; i < headers.Length; i++)
+                    string line = null;
+                    while (!sr.EndOfStream)
                     {
-                        dr[i] = rows[i];
+                        line = sr.ReadLine();
+                        string[] rows = line.Split(',');
+                        DataRow dr = dt.NewRow();
+                        for (int i = 0; i < headers.Length; i++)
+                        {
+                            dr[i] = rows[i];
+                        }
+                        dt.Rows.Add(dr);
+                        outputStream.WriteLine(line);
                     }
-                    dt.Rows.Add(dr);
+                    outputStream.Write(sr.ReadToEnd());
                 }
 
             }
 
             return dt;
         }
+        private void copyToOutputStream(StreamReader inputStream, StreamWriter outputStream)
+        {
+            string line = null;
+            while ((line = inputStream.ReadLine()) != null)
+            {
+                outputStream.WriteLine(line);
+            }
+            outputStream.Write(inputStream.ReadToEnd());
+        }
 
-            //Dictionary<string, CsvData> data = new Dictionary<string, CsvData>();
+        //Dictionary<string, CsvData> data = new Dictionary<string, CsvData>();
 
-            //using (TextFieldParser parser = new TextFieldParser(filePath))
-            //{
-            //    parser.TextFieldType = FieldType.Delimited;
-            //    parser.SetDelimiters(",");
-            //    while (!parser.EndOfData)
-            //    {
-            //        string[] fields = parser.ReadFields();
-            //        var csvData = new CsvData();
+        //using (TextFieldParser parser = new TextFieldParser(filePath))
+        //{
+        //    parser.TextFieldType = FieldType.Delimited;
+        //    parser.SetDelimiters(",");
+        //    while (!parser.EndOfData)
+        //    {
+        //        string[] fields = parser.ReadFields();
+        //        var csvData = new CsvData();
 
-            //        for (int i = 1; i < fields.Length; i++)
-            //        {
-            //            csvData.Values.Add(Convert.ToDecimal(fields[i]));
-            //        }
-            //        data.Add(fields[0], csvData);
-            //    }
-            //}
+        //        for (int i = 1; i < fields.Length; i++)
+        //        {
+        //            csvData.Values.Add(Convert.ToDecimal(fields[i]));
+        //        }
+        //        data.Add(fields[0], csvData);
+        //    }
+        //}
 
-            //return data;
-        
+        //return data;
+
     }
 }

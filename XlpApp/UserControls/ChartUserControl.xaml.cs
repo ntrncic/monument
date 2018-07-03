@@ -33,8 +33,11 @@ namespace XlpApp.UserControls
             InitializeComponent();
             DataTableStocks = new DataTable();
             DataTableStocks.Columns.Add("Stock");
+            DataColumn[] keys = new DataColumn[1];
+            keys[0] = DataTableStocks.Columns[0];
+            DataTableStocks.PrimaryKey = keys;
 
-            end_date.SelectedDate = DateTime.Now;
+           end_date.SelectedDate = DateTime.Now;
             DataContext = this;
             SeriesCollection = new SeriesCollection();
             //SeriesCollection = new SeriesCollection
@@ -337,47 +340,37 @@ namespace XlpApp.UserControls
         private void UpdateDataTable(Dictionary<string, CsvData> dataFromFile)
         {
             DateTime dateTime = end_date.DisplayDate;
+            var testoc = new ObservableCollection<object>();
+            int n = 0;
+            List<string> keyList = new List<string>(dataFromFile.Keys);
+            string stockId = keyList[0].ToUpper();
+            int predictionId = 1;
             foreach (var item in dataFromFile["Prediction"].Values)
             {
                 if (item != 0)
                 {
                     dateTime = dateTime.AddDays(1);
-                    DataRow dr = DataTableStocks.Rows[DataTableStocks.Rows.Count - 1];
-                    DataTableStocks.Rows.Add(
-                        new Object[]
-                        {
-                            dateTime.ToShortDateString(),
-                            dr["OpenPrice"],
-                            item,
-                            dr["HighPrice"],
-                            dr["LowPrice"],
-                            dr["Volume"]
-                        });
+                    DataTableStocks.Columns.Add("Prediction " + predictionId);
+                    predictionId++;
+                    DataRow dr = DataTableStocks.Rows.Find(stockId);
+                    dr[DataTableStocks.Columns.Count - 1] = item;
                 }
             }
-        }
-
-        private void UpdateDataTableUpload(Dictionary<string, CsvData> dataFromFile)
-        {
-            DateTime dateTime = end_date.DisplayDate;
-            foreach (var item in dataFromFile["Prediction"].Values)
+            foreach (var row in DataTableStocks.Rows)
             {
-                if (item != 0)
-                {
-                    dateTime = dateTime.AddDays(1);
-                    DataRow dr = DataTableStocks.Rows[DataTableStocks.Rows.Count - 1];
-                    DataTableStocks.Rows.Add(
-                        new Object[]
-                        {
-                            dateTime.ToShortDateString(),
-                            dr["OpenPrice"],
-                            item,
-                            dr["HighPrice"],
-                            dr["LowPrice"],
-                            dr["Volume"]
-                        });
-                }
+                n = ((System.Data.DataRow)(row)).ItemArray.Length;
+                testoc.Add(((System.Data.DataRow)(row)).ItemArray);
             }
+            //Auto-generate Columns with binding
+            StockDataGrid.Columns.Clear();
+            for (int i = 0; i < n; i++)
+            {
+                StockDataGrid.Columns.Add
+                    (
+                    new DataGridTextColumn() { Header = DataTableStocks.Columns[i].ColumnName, Binding = new Binding(".[" + i.ToString() + "]") }
+                    );
+            }
+            StockDataGrid.ItemsSource = testoc;
         }
 
         #endregion Helper methods

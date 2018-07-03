@@ -136,11 +136,11 @@ namespace XlpApp
             var csvData = new StringBuilder();
             csvData.AppendLine("Average");
 
-            var newLine = "Date, ";
+            var newLine = "Date";
             foreach (DataColumn column in results.Columns)
             {
                 if (column.ColumnName != "Stock")
-                    newLine += column.ColumnName + ", ";
+                    newLine += "," + column.ColumnName;
             }
             csvData.AppendLine(newLine);
 
