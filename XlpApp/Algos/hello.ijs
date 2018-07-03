@@ -1,7 +1,7 @@
 load 'csv'
 
-filepath =: 'C:\Users\ntrncic\source\public_repos\XlpApp\XlpApp\bin\Debug\Algos\data.csv'
-outpath =: 'C:\Users\ntrncic\source\public_repos\XlpApp\XlpApp\bin\Debug\Algos\out.csv'
+filepath =: 'C:\Users\ntrncic\Documents\GitHub\monument\XlpApp\bin\Debug\Algos\data.csv'
+outpath =: 'C:\Users\ntrncic\Documents\GitHub\monument\XlpApp\bin\Debug\Algos\out.csv'
 
 dat =: readcsv filepath
 algoname =: {.{.dat
