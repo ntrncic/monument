@@ -106,6 +106,7 @@ namespace XlpApp.UserControls
                 DataTableStocks = ParseCVSFile.ConvertCSVtoDataTable(openFileDialog.FileName);
                 addStockPopup.IsOpen = false;
                 LoadData(DataTableStocks);
+                UpdateChart(StockParser.GetChartData(DataTableStocks));
                 //var data = ParseCVSFile.UploadReadFile(openFileDialog.FileName);
                 //DataTableStocks.Rows.Add(data.Values);
                 //UpdateDataTable(data);
