@@ -1,6 +1,7 @@
 ﻿using LiveCharts;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
+using LiveCharts.Geared;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,36 +16,7 @@ namespace XlpApp.Helpers
     class StockParser
     {
 
-        private static SeriesCollection Series
-        {
-            get
-            {
-                return new SeriesCollection
-                {
-                    new LineSeries
-                    {
-                        Title = "Open",
-                        Values = new ChartValues<double>()
-                    },
-                    new LineSeries
-                    {
-                        Title = "Close",
-                        Values = new ChartValues<double>()
-                    },
-                    new LineSeries
-                    {
-                        Title = "High",
-                        Values = new ChartValues<double>()
-                    },
-                    new LineSeries
-                    {
-                        Title = "Low",
-                        Values = new ChartValues<double>()
-                    }
-                };
-            }
-            set { }
-        }
+        private static SeriesCollection Series { get; set; }
 
         public static (SeriesCollection ValueSeries, List<string> Labels) GetChartData(IReadOnlyList<IStockQuoteFromDataSource> stockQuoteFromDataSources)
         {
@@ -100,7 +72,41 @@ namespace XlpApp.Helpers
             return (series, labels);
         }
 
-        public static (SeriesCollection ValueSeries, List<string> Labels) GetOhlcChartData(IReadOnlyList<IStockQuoteFromDataSource> stockQuoteFromDataSources)
+        public static (SeriesCollection ValueSeries, List<string> Labels) GetChartDataGeared(DataTable stockQuoteFromDataSources)
+        {
+            List<string> labels = new List<string>();
+            Series = new SeriesCollection();
+
+            foreach (DataRow item in stockQuoteFromDataSources.Rows) //series
+            {
+                var values = new double [item.ItemArray.Length-1];
+                for (int i = 1; i < item.ItemArray.Length; i++)
+                {
+                    values[i - 1] = Convert.ToDouble(item[i].ToString());
+                }
+                var gseries = new GLineSeries
+                {
+                    Values = values.AsGearedValues().WithQuality(Quality.Low),
+                    Fill = Brushes.Transparent,
+                    StrokeThickness = .5,
+                    PointGeometry = null //use a null geometry when you have many series
+                };
+
+                Series.Add(gseries);
+
+            }
+
+            foreach (DataColumn dc in stockQuoteFromDataSources.Columns)
+            {
+                if (dc.ColumnName == "Stock")
+                    continue;
+                labels.Add(dc.ColumnName);
+            }
+
+            return (Series, labels);
+        }
+
+            public static (SeriesCollection ValueSeries, List<string> Labels) GetOhlcChartData(IReadOnlyList<IStockQuoteFromDataSource> stockQuoteFromDataSources)
         {
             var stockSeries = new ChartValues<OhlcPoint>();
             var labels = new List<string>();

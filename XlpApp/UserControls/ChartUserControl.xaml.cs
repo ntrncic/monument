@@ -37,7 +37,7 @@ namespace XlpApp.UserControls
             keys[0] = DataTableStocks.Columns[0];
             DataTableStocks.PrimaryKey = keys;
 
-           end_date.SelectedDate = DateTime.Now;
+            end_date.SelectedDate = DateTime.Now;
             DataContext = this;
             SeriesCollection = new SeriesCollection();
             //SeriesCollection = new SeriesCollection
@@ -106,7 +106,7 @@ namespace XlpApp.UserControls
                 DataTableStocks = ParseCVSFile.ConvertCSVtoDataTable(openFileDialog.FileName);
                 addStockPopup.IsOpen = false;
                 LoadData(DataTableStocks);
-                UpdateChart(StockParser.GetChartData(DataTableStocks));
+                UpdateChart(StockParser.GetChartDataGeared(DataTableStocks));
                 //var data = ParseCVSFile.UploadReadFile(openFileDialog.FileName);
                 //DataTableStocks.Rows.Add(data.Values);
                 //UpdateDataTable(data);
@@ -116,15 +116,15 @@ namespace XlpApp.UserControls
         }
 
 
-        private void UpdateChart(IReadOnlyList<IStockQuoteFromDataSource> stockQuoteFromDataSources)
-        {
-            SeriesCollection.Clear();
-            var series = StockParser.GetOhlcChartData(stockQuoteFromDataSources);
+        //private void UpdateChart(IReadOnlyList<IStockQuoteFromDataSource> stockQuoteFromDataSources)
+        //{
+        //    SeriesCollection.Clear();
+        //    var series = StockParser.GetOhlcChartData(stockQuoteFromDataSources);
 
-            SeriesCollection.AddRange(series.ValueSeries);
-            Chart1.AxisX[0].Labels = series.Labels;
+        //    SeriesCollection.AddRange(series.ValueSeries);
+        //    Chart1.AxisX[0].Labels = series.Labels;
 
-        }
+        //}
 
         private void AddToChart(CartesianChart cartesianChart, SeriesCollection seriesCollection, (SeriesCollection ValueSeries, List<string> Labels) chartData)
         {
@@ -179,7 +179,7 @@ namespace XlpApp.UserControls
             //view.SortDescriptions.Add(new SortDescription("TradeDateTime", ListSortDirection.Descending));
             //lst_stocks.DataContext = dv;
 
-            UpdateChart(StockParser.GetChartData(DataTableStocks));
+            UpdateChart(StockParser.GetChartDataGeared(DataTableStocks));
 
             Mouse.OverrideCursor = previousCursor;
         }
@@ -202,7 +202,7 @@ namespace XlpApp.UserControls
             var data = ParseCVSFile.ReadFile(Environment.CurrentDirectory + @"\Algos\out.csv");
 
             UpdateDataTable(data);
-            UpdateChart(StockParser.GetChartData(DataTableStocks));
+            UpdateChart(StockParser.GetChartDataGeared(DataTableStocks));
 
             //AppendChartValues(StockParser.GetChartData(data, SeriesCollection[0].Values.Count, end_date.DisplayDate));
 
@@ -298,14 +298,14 @@ namespace XlpApp.UserControls
         {
         }
 
-        private void AppendChartValues((SeriesCollection ValueSeries, List<string> Labels) dataForChart)
-        {
-            SeriesCollection.AddRange(dataForChart.ValueSeries);
-            foreach (var item in Labels)
-            {
-                Chart1.AxisX[0].Labels.Add(item);
-            }
-        }
+        //private void AppendChartValues((SeriesCollection ValueSeries, List<string> Labels) dataForChart)
+        //{
+        //    SeriesCollection.AddRange(dataForChart.ValueSeries);
+        //    foreach (var item in Labels)
+        //    {
+        //        Chart1.AxisX[0].Labels.Add(item);
+        //    }
+        //}
 
         private void LoadData(DataTable TestTable)
         {
@@ -334,6 +334,7 @@ namespace XlpApp.UserControls
 
         private void UpdateChart((SeriesCollection ValueSeries, List<string> Labels) dataForChart)
         {
+            //updates chart
             SeriesCollection.Clear();
             SeriesCollection.AddRange(dataForChart.ValueSeries);
             Chart1.AxisX[0].Labels = dataForChart.Labels;

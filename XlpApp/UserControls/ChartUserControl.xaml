@@ -111,7 +111,10 @@
                     </StackPanel>
                 </Border>
             </StackPanel>
-            <lvc:CartesianChart Name="Chart1" Series="{Binding SeriesCollection}" LegendLocation="Right" Height="330">
+            <lvc:CartesianChart DisableAnimations="True" Series="{Binding SeriesCollection}" DataTooltip="{x:Null}" Zoom="Xy"
+                            Name="Chart1"
+                            Height="330"
+                            LegendLocation="Right">
                 <lvc:CartesianChart.AxisY>
                     <lvc:Axis Title="Price" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
                 </lvc:CartesianChart.AxisY>
@@ -119,6 +122,14 @@
                     <lvc:Axis Title="Time" Labels="{Binding Labels}"></lvc:Axis>
                 </lvc:CartesianChart.AxisX>
             </lvc:CartesianChart>
+            <!--<lvc:CartesianChart Name="Chart1" Series="{Binding SeriesCollection}" LegendLocation="Right" Height="330">
+                <lvc:CartesianChart.AxisY>
+                    <lvc:Axis Title="Price" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+                </lvc:CartesianChart.AxisY>
+                <lvc:CartesianChart.AxisX>
+                    <lvc:Axis Title="Time" Labels="{Binding Labels}"></lvc:Axis>
+                </lvc:CartesianChart.AxisX>
+            </lvc:CartesianChart>-->
             <StackPanel Orientation="Horizontal">
                 <Label Content="Stocks" Foreground="White" Width="80"></Label>
                 <Button Name="btnAddStock" Height="15" Content="+" Foreground="Green" Click="btnAddStock_Click"></Button>
